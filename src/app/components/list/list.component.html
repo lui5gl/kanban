@@ -1,13 +1,15 @@
-<div class="flex flex-col gap-4 p-4 bg-white rounded-sm shadow-md">
-  <div class="flex justify-between">
-    <h2 class="text-2xl font-semibold">{{ title }}</h2>
+<div class="grid gap-5 p-5 rounded-md shadow-md bg-gray-50/25">
+  <header class="flex justify-between">
+    <h2 class="text-2xl font-semibold select-none text-gray-50">
+      {{ title }}
+    </h2>
     <button
       (click)="addItem()"
-      class="flex items-center justify-center w-8 h-8 rounded-sm bg-neutral-700"
+      class="p-2 rounded-full select-none bg-gray-50/25"
     >
-      <img src="/icons/add.svg" width="18" height="18" alt="Add" />
+      <img src="/icons/add.svg" width="18" height="18" alt="Add icon" />
     </button>
-  </div>
+  </header>
   <div *ngFor="let item of items; let i = index">
     <app-card
       [id]="item.id"
@@ -15,6 +17,6 @@
       [content]="item.description"
       (delete)="removeItem(item.id)"
       (save)="saveItem($event)"
-    ></app-card>
+    />
   </div>
 </div>
