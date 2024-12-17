@@ -25,6 +25,7 @@
       id="title-{{ id }}"
       class="text-xl font-semibold text-balance"
       [attr.contenteditable]="!lock_state"
+      (blur)="saveItem()"
     >
       {{ title }}
     </h3>
@@ -33,6 +34,7 @@
       id="content-{{ id }}"
       class="text-pretty"
       [attr.contenteditable]="!lock_state"
+      (blur)="saveItem()"
     >
       {{ content }}
     </p>
