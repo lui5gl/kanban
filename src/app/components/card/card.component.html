@@ -1,8 +1,8 @@
-<div class="grid gap-2 p-4 bg-gray-50 rounded-xl">
-  <div class="flex justify-between">
+<div class="grid gap-2 p-4 rounded-sm bg-gray-50">
+  <div class="flex justify-between h-7">
     <button
       (click)="changeLockState()"
-      class="flex items-center justify-center gap-1 px-2 bg-gray-200 rounded-sm select-none"
+      class="flex items-center justify-center h-full gap-1 p-2 transition-all duration-150 bg-gray-200 rounded-sm select-none hover:bg-gray-300"
     >
       <img
         src="/icons/{{ lock_state ? 'unlock' : 'lock' }}.svg"
@@ -10,14 +10,13 @@
         width="16"
         height="16"
       />
-      {{ lock_state ? "Unlock" : "Lock" }}
+      {{ lock_state ? "Unlock" : "" }}
     </button>
     <button
-      class="flex items-center justify-center gap-1 px-2 bg-gray-200 rounded-sm select-none"
+      class="flex items-center justify-center h-full gap-1 p-2 transition-all duration-150 bg-gray-200 rounded-sm select-none hover:bg-gray-300"
       (click)="deleteItem()"
     >
       <img src="/icons/delete.svg" alt="delete icon" width="16" height="16" />
-      Delete
     </button>
   </div>
   <div>
