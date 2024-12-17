@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-card',
@@ -7,31 +7,31 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class CardComponent {
   @Input() id: number = 0;
-  @Input() title = '';
-  @Input() content = '';
-  @Input() lock_state = false;
+  @Input() title: string = 'Default Title';
+  @Input() description: string = 'Default description';
+  @Input() lock_state: boolean = false;
 
   @Output() delete = new EventEmitter<number>();
   @Output() save = new EventEmitter<{
     id: number;
     title: string;
-    content: string;
+    description: string;
   }>();
 
   changeLockState() {
     this.lock_state = !this.lock_state;
-    this.updateInputsByLockState();
-  }
 
-  updateInputsByLockState() {
     const titleElement = document.getElementById(`title-${this.id}`);
-    const contentElement = document.getElementById(`content-${this.id}`);
+    const descriptionElement = document.getElementById(
+      `description-${this.id}`
+    );
+
     if (this.lock_state) {
       titleElement?.setAttribute('contenteditable', 'false');
-      contentElement?.setAttribute('contenteditable', 'false');
+      descriptionElement?.setAttribute('contenteditable', 'false');
     } else {
       titleElement?.setAttribute('contenteditable', 'true');
-      contentElement?.setAttribute('contenteditable', 'true');
+      descriptionElement?.setAttribute('contenteditable', 'true');
     }
   }
 
@@ -41,15 +41,15 @@ export class CardComponent {
 
   saveItem() {
     const titleElement = document.getElementById(`title-${this.id}`);
-    const contentElement = document.getElementById(`content-${this.id}`);
+    const descriptionElement = document.getElementById(`content-${this.id}`);
 
     this.title = titleElement?.textContent ?? '';
-    this.content = contentElement?.textContent ?? '';
+    this.description = descriptionElement?.textContent ?? '';
 
     this.save.emit({
       id: this.id,
       title: this.title,
-      content: this.content,
+      description: this.description,
     });
   }
 }
