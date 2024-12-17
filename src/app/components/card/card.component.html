@@ -1,40 +1,26 @@
-<div class="rounded-md shadow-sm bg-neutral-100">
-  <div
-    class="flex items-center justify-center py-1 select-none cursor-grab bg-neutral-600 rounded-t-md"
-  >
-    <img src="/icons/drag.svg" alt="drag icon" width="16" height="16" />
-  </div>
-  <div class="flex justify-between px-4 py-2">
-    <div class="flex gap-2">
-      <button
-        (click)="saveItem()"
-        class="flex items-center justify-center gap-1 px-2 rounded-sm bg-neutral-200"
-      >
-        <img src="/icons/save.svg" alt="save icon" width="16" height="16" />
-        Save
-      </button>
-      <button
-        (click)="changeLockState()"
-        class="flex items-center justify-center gap-1 px-2 rounded-sm bg-neutral-200"
-      >
-        <img
-          src="/icons/{{ lock_state ? 'unlock' : 'lock' }}.svg"
-          alt="lock icon"
-          width="16"
-          height="16"
-        />
-        {{ lock_state ? "Unlock" : "Lock" }}
-      </button>
-    </div>
+<div class="grid gap-2 p-4 bg-gray-50 rounded-xl">
+  <div class="flex justify-between">
     <button
-      class="flex items-center justify-center gap-1 px-2 rounded-sm bg-neutral-200"
+      (click)="changeLockState()"
+      class="flex items-center justify-center gap-1 px-2 bg-gray-200 rounded-sm select-none"
+    >
+      <img
+        src="/icons/{{ lock_state ? 'unlock' : 'lock' }}.svg"
+        alt="lock icon"
+        width="16"
+        height="16"
+      />
+      {{ lock_state ? "Unlock" : "Lock" }}
+    </button>
+    <button
+      class="flex items-center justify-center gap-1 px-2 bg-gray-200 rounded-sm select-none"
       (click)="deleteItem()"
     >
       <img src="/icons/delete.svg" alt="delete icon" width="16" height="16" />
       Delete
     </button>
   </div>
-  <div class="flex flex-col gap-2 p-4">
+  <div>
     <h3
       id="title-{{ id }}"
       class="text-xl font-semibold text-balance"
@@ -42,7 +28,7 @@
     >
       {{ title }}
     </h3>
-    <hr class="border-neutral-600" />
+    <hr class="border-b border-gray-300" />
     <p
       id="content-{{ id }}"
       class="text-pretty"
