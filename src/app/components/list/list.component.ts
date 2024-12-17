@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
 import { NgForOf } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 
 @Component({
@@ -45,11 +45,11 @@ export class ListComponent implements OnInit {
     this.saveItems();
   }
 
-  saveItem(item: { id: number; title: string; content: string }): void {
+  saveItem(item: { id: number; title: string; description: string }): void {
     const index = this.items.findIndex((i) => i.id === item.id);
     if (index !== -1) {
       this.items[index].title = item.title;
-      this.items[index].description = item.content;
+      this.items[index].description = item.description;
       this.saveItems();
     }
   }

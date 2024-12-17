@@ -23,7 +23,7 @@
   <div>
     <h3
       id="title-{{ id }}"
-      class="text-xl font-semibold text-balance"
+      class="text-xl font-semibold text-balance min-h-7"
       [attr.contenteditable]="!lock_state"
       (blur)="saveItem()"
     >
@@ -31,12 +31,12 @@
     </h3>
     <hr class="border-b border-gray-300" />
     <p
-      id="content-{{ id }}"
-      class="text-pretty"
+      id="description-{{ id }}"
+      class="text-pretty min-h-7"
       [attr.contenteditable]="!lock_state"
       (blur)="saveItem()"
     >
-      {{ content }}
+      {{ description }}
     </p>
   </div>
 </div>
