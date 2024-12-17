@@ -36,12 +36,15 @@ export class CardComponent {
   }
 
   deleteItem() {
-    this.delete.emit(this.id);
+    let confirm = window.confirm('Are you sure you want to delete this item?');
+    if (confirm) this.delete.emit(this.id);
   }
 
   saveItem() {
     const titleElement = document.getElementById(`title-${this.id}`);
-    const descriptionElement = document.getElementById(`content-${this.id}`);
+    const descriptionElement = document.getElementById(
+      `description-${this.id}`
+    );
 
     this.title = titleElement?.textContent ?? '';
     this.description = descriptionElement?.textContent ?? '';
