@@ -10,6 +10,7 @@ export class CardComponent {
   @Input() title = '';
   @Input() content = '';
   @Input() lock_state = false;
+
   @Output() delete = new EventEmitter<number>();
   @Output() save = new EventEmitter<{
     id: number;
@@ -39,14 +40,16 @@ export class CardComponent {
   }
 
   saveItem() {
-    const titleElement =
-      document.getElementById(`title-${this.id}`)?.innerText || this.title;
-    const contentElement =
-      document.getElementById(`content-${this.id}`)?.innerText || this.content;
+    const titleElement = document.getElementById(`title-${this.id}`);
+    const contentElement = document.getElementById(`content-${this.id}`);
+
+    this.title = titleElement?.textContent ?? '';
+    this.content = contentElement?.textContent ?? '';
+
     this.save.emit({
       id: this.id,
-      title: titleElement,
-      content: contentElement,
+      title: this.title,
+      content: this.content,
     });
   }
 }
