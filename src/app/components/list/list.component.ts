@@ -10,7 +10,12 @@ import { CardComponent } from '../card/card.component';
 })
 export class ListComponent implements OnInit {
   @Input() title = '';
-  items: { id: number; title: string; description: string }[] = [];
+  items: {
+    id: number;
+    title: string;
+    description: string;
+    created_at: string;
+  }[] = [];
 
   ngOnInit(): void {
     this.loadItems();
@@ -26,6 +31,7 @@ export class ListComponent implements OnInit {
   addItem(): void {
     let newTitle = 'Nuevo Título';
     let newDescription = 'Nueva Descripción';
+    let createdAt = new Date();
 
     if (newTitle && newDescription) {
       const newId = this.items.length
@@ -35,6 +41,7 @@ export class ListComponent implements OnInit {
         id: newId,
         title: newTitle,
         description: newDescription,
+        created_at: `${createdAt.getFullYear()}/${createdAt.getMonth()}/${createdAt.getDay()}`,
       });
       this.saveItems();
     }
