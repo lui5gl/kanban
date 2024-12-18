@@ -7,9 +7,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class CardComponent implements OnInit {
   @Input() id: number = 0;
-  @Input() title: string = 'Default Title';
-  @Input() description: string = 'Default description';
-  @Input() created_at: string = '0000/00/00';
+  @Input() title: string = 'Undefined Title';
+  @Input() description: string = 'Undefined description';
+  @Input() created_at: string = 'Undefined';
   @Input() lock_state: boolean = false;
 
   @Output() delete = new EventEmitter<number>();
