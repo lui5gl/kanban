@@ -17,8 +17,9 @@
     [title]="item.title"
     [description]="item.description"
     [created_at]="item.created_at"
-    (delete)="removeItem(item.id)"
+    [lock_state]="item.lock_state"
     (save)="saveItem($event)"
+    (delete)="removeItem(item.id)"
   />
   }
 </div>
