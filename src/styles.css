@@ -5,25 +5,4 @@
 body {
   font-family: "Onest", sans-serif;
 }
-
-.show_text {
-  display: flex;
-  align-items: center;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.show_text span {
-  display: none;
-  width: 100%;
-}
-
-.show_text:hover {
-  gap: 0.5rem;
-  padding-left: 1rem;
-}
-
-.show_text:hover span {
-  display: flex;
-  width: auto;
-  opacity: 1;
-}
+  
