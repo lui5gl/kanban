@@ -9,6 +9,7 @@ export class CardComponent {
   @Input() id: number = 0;
   @Input() title: string = 'Default Title';
   @Input() description: string = 'Default description';
+  @Input() created_at: string = '0000/00/00';
   @Input() lock_state: boolean = false;
 
   @Output() delete = new EventEmitter<number>();
