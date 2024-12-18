@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   styles: [],
 })
-export class CardComponent {
+export class CardComponent implements OnInit {
   @Input() id: number = 0;
   @Input() title: string = 'Default Title';
   @Input() description: string = 'Default description';
@@ -17,11 +17,14 @@ export class CardComponent {
     id: number;
     title: string;
     description: string;
+    lock_state: boolean;
   }>();
 
-  changeLockState() {
-    this.lock_state = !this.lock_state;
+  ngOnInit(): void {
+    this.loadLockState();
+  }
 
+  loadLockState() {
     const titleElement = document.getElementById(`title-${this.id}`);
     const descriptionElement = document.getElementById(
       `description-${this.id}`
@@ -34,6 +37,12 @@ export class CardComponent {
       titleElement?.setAttribute('contenteditable', 'true');
       descriptionElement?.setAttribute('contenteditable', 'true');
     }
+  }
+
+  toggleLockState() {
+    this.lock_state = !this.lock_state;
+    this.saveItem();
+    this.loadLockState();
   }
 
   deleteItem() {
@@ -54,6 +63,7 @@ export class CardComponent {
       id: this.id,
       title: this.title,
       description: this.description,
+      lock_state: this.lock_state,
     });
   }
 }
