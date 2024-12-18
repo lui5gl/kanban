@@ -1,14 +1,24 @@
-<div class="grid gap-5 p-5 rounded-sm shadow-md bg-neutral-50/25">
+<div class="grid gap-5 p-5 rounded-md shadow-md bg-neutral-50/25">
   <header class="relative flex justify-between">
     <h2 class="text-2xl font-semibold select-none text-neutral-50">
       {{ column_name }}
     </h2>
     <button
       (click)="addCard()"
-      class="absolute top-0 right-0 flex items-center justify-center gap-2 p-2 rounded-full select-none hover:px-4 bg-neutral-50/25 show_text"
+      class="flex gap-1 justify-center items-center bg-neutral-50/25 px-2 rounded-md group"
     >
-      <img src="/icons/add.svg" width="16" height="16" alt="Add item" />
-      <span class="font-semibold text-white">Add card</span>
+      <img
+        src="/icons/add.svg"
+        width="16"
+        height="16"
+        alt="Add item"
+        class="group-hover:rotate-45 transition-all duration-200"
+      />
+      <span
+        class="font-semibold hidden text-white group-hover:flex transition-all duration-200 group-hover:opacity-100 opacity-0"
+      >
+        Add card
+      </span>
     </button>
   </header>
   @for (card of cards; track $index) {
