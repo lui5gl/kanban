@@ -1,7 +1,6 @@
-<div class="grid gap-2 p-4 rounded-sm bg-gray-50">
-  <div class="flex justify-between h-7">
+<div class="grid gap-1 p-4 rounded-sm bg-gray-50">
+  <div class="flex justify-between mb-1 h-7">
     <button
-      id="lock-state-{{ id }}"
       (click)="toggleLockState()"
       class="flex items-center justify-center h-full gap-1 p-2 transition-all duration-150 bg-gray-200 rounded-sm select-none hover:bg-gray-300"
     >
@@ -20,28 +19,25 @@
       <img src="/icons/delete.svg" alt="delete icon" width="16" height="16" />
     </button>
   </div>
-  <div>
-    <h3
-      id="title-{{ id }}"
-      class="text-xl font-semibold text-balance min-h-7"
-      [attr.contenteditable]="!lock_state"
-      (blur)="saveItem()"
-    >
-      {{ title }}
-    </h3>
-    <hr class="border-b border-gray-300" />
-    <p
-      id="description-{{ id }}"
-      class="text-pretty min-h-7"
-      [attr.contenteditable]="!lock_state"
-      (blur)="saveItem()"
-    >
-      {{ description }}
-    </p>
-  </div>
-  <div>
-    <span class="text-sm font-light text-neutral-500">
-      Created at: {{ created_at }}
-    </span>
-  </div>
+
+  <h3
+    id="title-{{ id }}"
+    class="text-xl font-semibold border-b-2 text-balance min-h-7 border-neutral-200"
+    [attr.contenteditable]="!lock_state"
+    (blur)="saveItem()"
+  >
+    {{ title }}
+  </h3>
+  <p
+    id="description-{{ id }}"
+    class="text-pretty min-h-7"
+    [attr.contenteditable]="!lock_state"
+    (blur)="saveItem()"
+  >
+    {{ description }}
+  </p>
+
+  <span class="text-sm font-light text-neutral-500">
+    Created at: {{ created_at }}
+  </span>
 </div>
