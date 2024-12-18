@@ -1,24 +1,24 @@
-<div class="grid gap-5 p-5 rounded-sm shadow-md bg-gray-50/25">
+<div class="grid gap-5 p-5 rounded-sm shadow-md bg-neutral-50/25">
   <header class="relative flex justify-between">
-    <h2 class="text-2xl font-semibold select-none text-gray-50">
+    <h2 class="text-2xl font-semibold select-none text-neutral-50">
       {{ title }}
     </h2>
     <button
       (click)="addItem()"
-      class="absolute top-0 right-0 flex items-center justify-center gap-2 p-2 rounded-full select-none hover:px-4 bg-white/25 show_text"
+      class="absolute top-0 right-0 flex items-center justify-center gap-2 p-2 rounded-full select-none hover:px-4 bg-neutral-50/25 show_text"
     >
-      <img src="/icons/add.svg" width="16" height="16" alt="Add icon" />
+      <img src="/icons/add.svg" width="16" height="16" alt="Add item" />
       <span class="font-semibold text-white">Add card</span>
     </button>
   </header>
-  <div *ngFor="let item of items; let i = index">
-    <app-card
-      [id]="item.id"
-      [title]="item.title"
-      [description]="item.description"
-      [created_at]="item.created_at"
-      (delete)="removeItem(item.id)"
-      (save)="saveItem($event)"
-    />
-  </div>
+  @for (item of items; track $index) {
+  <app-card
+    [id]="item.id"
+    [title]="item.title"
+    [description]="item.description"
+    [created_at]="item.created_at"
+    (delete)="removeItem(item.id)"
+    (save)="saveItem($event)"
+  />
+  }
 </div>
