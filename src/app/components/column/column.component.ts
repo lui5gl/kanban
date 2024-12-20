@@ -8,7 +8,7 @@ import { CardComponent } from '../card/card.component';
   imports: [CardComponent],
 })
 export class ColumnComponent implements OnInit {
-  @Input() column_name = 'Default column name';
+  @Input() column_name = 'Undefined column name';
   cards: {
     id: number;
     title: string;
@@ -18,15 +18,14 @@ export class ColumnComponent implements OnInit {
   }[] = [];
 
   ngOnInit(): void {
-    const storedCards = localStorage.getItem(this.column_name);
-    if (storedCards) {
-      this.cards = JSON.parse(storedCards);
-    }
+    const columnStoredCards = localStorage.getItem(this.column_name);
+    this.cards = columnStoredCards ? JSON.parse(columnStoredCards) : [];
   }
 
   addCard(): void {
-    const newTitle = 'New Title';
-    const newDescription = 'New Description';
+    const newId = this.cards.length
+      ? Math.max(...this.cards.map((item) => item.id)) + 1
+      : 1;
 
     const today = new Date();
 
@@ -34,19 +33,14 @@ export class ColumnComponent implements OnInit {
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
     const day = today.getDate().toString().padStart(2, '0');
 
-    if (newTitle && newDescription) {
-      const newId = this.cards.length
-        ? Math.max(...this.cards.map((item) => item.id)) + 1
-        : 1;
-      this.cards.push({
-        id: newId,
-        title: newTitle,
-        description: newDescription,
-        lock_state: false,
-        created_at: `${year}/${month}/${day}`,
-      });
-      this.saveCards();
-    }
+    this.cards.push({
+      id: newId,
+      title: 'New Title',
+      description: 'New Description',
+      lock_state: false,
+      created_at: `${year}/${month}/${day}`,
+    });
+    this.saveCards();
   }
 
   removeCard(id: number): void {
@@ -61,12 +55,14 @@ export class ColumnComponent implements OnInit {
     lock_state: boolean;
   }): void {
     const index = this.cards.findIndex((i) => i.id === item.id);
-    if (index !== -1) {
-      this.cards[index].title = item.title;
-      this.cards[index].description = item.description;
-      this.cards[index].lock_state = item.lock_state;
-      this.saveCards();
-    }
+
+    if (index === -1)
+      return console.error('The card you are trying to delete does not exist.');
+
+    this.cards[index].title = item.title;
+    this.cards[index].description = item.description;
+    this.cards[index].lock_state = item.lock_state;
+    this.saveCards();
   }
 
   saveCards(): void {
