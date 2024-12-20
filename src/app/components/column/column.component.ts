@@ -27,7 +27,12 @@ export class ColumnComponent implements OnInit {
   addCard(): void {
     const newTitle = 'New Title';
     const newDescription = 'New Description';
-    let createdAt = new Date();
+
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
 
     if (newTitle && newDescription) {
       const newId = this.cards.length
@@ -38,7 +43,7 @@ export class ColumnComponent implements OnInit {
         title: newTitle,
         description: newDescription,
         lock_state: false,
-        created_at: `${createdAt.getFullYear()}/${createdAt.getMonth()}/${createdAt.getDay()}`,
+        created_at: `${year}/${month}/${day}`,
       });
       this.saveCards();
     }
