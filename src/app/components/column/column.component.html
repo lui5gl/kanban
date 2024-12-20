@@ -1,35 +1,35 @@
-<div class="grid gap-5 p-5 rounded-md shadow-md bg-neutral-50/25">
+<div class="grid gap-5 rounded-md bg-neutral-50/25 p-5 shadow-md">
   <header class="relative flex justify-between">
-    <h2 class="text-2xl font-semibold select-none text-neutral-50">
+    <h2 class="select-none text-2xl font-semibold text-neutral-50">
       {{ column_name }}
     </h2>
     <button
       (click)="addCard()"
-      class="flex gap-1 justify-center items-center bg-neutral-50/25 px-2 rounded-md group"
+      class="group flex items-center justify-center gap-1 rounded-md bg-neutral-50/25 px-2"
     >
       <img
         src="/icons/add.svg"
         width="16"
         height="16"
         alt="Add item"
-        class="group-hover:rotate-45 transition-all duration-200"
+        class="transition-all duration-200 group-hover:rotate-45"
       />
       <span
-        class="font-semibold hidden text-white group-hover:flex transition-all duration-200 group-hover:opacity-100 opacity-0"
+        class="hidden font-semibold text-white opacity-0 transition-all duration-200 group-hover:flex group-hover:opacity-100"
       >
         Add card
       </span>
     </button>
   </header>
   @for (card of cards; track $index) {
-  <app-card
-    [id]="card.id"
-    [title]="card.title"
-    [description]="card.description"
-    [created_at]="card.created_at"
-    [lock_state]="card.lock_state"
-    (save)="updateCard($event)"
-    (delete)="removeCard(card.id)"
-  />
+    <app-card
+      [id]="card.id"
+      [title]="card.title"
+      [description]="card.description"
+      [created_at]="card.created_at"
+      [lock_state]="card.lock_state"
+      (save)="updateCard($event)"
+      (delete)="removeCard(card.id)"
+    />
   }
 </div>
