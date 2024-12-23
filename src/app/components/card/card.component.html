@@ -14,7 +14,7 @@
     </button>
     <button
       class="flex h-full select-none items-center justify-center gap-1 rounded-sm bg-gray-200 p-2 transition-all duration-150 hover:bg-gray-300"
-      (click)="deleteItem()"
+      (click)="deleteCard()"
     >
       <img src="/icons/delete.svg" alt="delete icon" width="16" height="16" />
     </button>
@@ -24,7 +24,7 @@
     id="title-{{ id }}"
     class="min-h-7 text-balance border-b-2 border-neutral-200 text-xl font-semibold"
     [attr.contenteditable]="!lock_state"
-    (blur)="saveItem()"
+    (blur)="saveCard()"
   >
     {{ title }}
   </h3>
@@ -32,7 +32,7 @@
     id="description-{{ id }}"
     class="min-h-7 text-pretty"
     [attr.contenteditable]="!lock_state"
-    (blur)="saveItem()"
+    (blur)="saveCard()"
   >
     {{ description }}
   </p>

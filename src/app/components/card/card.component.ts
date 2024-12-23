@@ -25,10 +25,8 @@ export class CardComponent implements OnInit {
   }
 
   loadLockState() {
-    const titleElement = document.getElementById(`title-${this.id}`);
-    const descriptionElement = document.getElementById(
-      `description-${this.id}`
-    );
+    let titleElement = document.getElementById(`title-${this.id}`);
+    let descriptionElement = document.getElementById(`description-${this.id}`);
 
     if (this.lock_state) {
       titleElement?.setAttribute('contenteditable', 'false');
@@ -41,28 +39,23 @@ export class CardComponent implements OnInit {
 
   toggleLockState() {
     this.lock_state = !this.lock_state;
-    this.saveItem();
+    this.saveCard();
     this.loadLockState();
   }
 
-  deleteItem() {
+  deleteCard() {
     let confirm = window.confirm('Are you sure you want to delete this item?');
     if (confirm) this.delete.emit(this.id);
   }
 
-  saveItem() {
-    const titleElement = document.getElementById(`title-${this.id}`);
-    const descriptionElement = document.getElementById(
-      `description-${this.id}`
-    );
-
-    this.title = titleElement?.textContent ?? '';
-    this.description = descriptionElement?.textContent ?? '';
+  saveCard() {
+    let titleElement = document.getElementById(`title-${this.id}`);
+    let descriptionElement = document.getElementById(`description-${this.id}`);
 
     this.save.emit({
       id: this.id,
-      title: this.title,
-      description: this.description,
+      title: titleElement?.textContent ?? '',
+      description: descriptionElement?.textContent ?? '',
       lock_state: this.lock_state,
     });
   }
