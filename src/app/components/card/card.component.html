@@ -1,8 +1,8 @@
-<div class="grid gap-1 rounded-sm bg-gray-50 p-4">
-  <div class="mb-1 flex h-7 justify-between">
+<div class="flex flex-col gap-1 rounded-sm bg-slate-50 p-4">
+  <div class="flex justify-between">
     <button
       (click)="toggleLockState()"
-      class="flex h-full select-none items-center justify-center gap-1 rounded-sm bg-gray-200 p-2 transition-all duration-150 hover:bg-gray-300"
+      class="flex h-7 items-center justify-center gap-1 rounded-sm bg-slate-200 px-2 transition-all duration-150 hover:bg-slate-300"
     >
       <img
         src="/icons/{{ lock_state ? 'unlock' : 'lock' }}.svg"
@@ -13,8 +13,8 @@
       {{ lock_state ? "Unlock" : "" }}
     </button>
     <button
-      class="flex h-full select-none items-center justify-center gap-1 rounded-sm bg-gray-200 p-2 transition-all duration-150 hover:bg-gray-300"
       (click)="deleteCard()"
+      class="flex h-7 items-center justify-center gap-1 rounded-sm bg-slate-200 px-2 transition-all duration-150 hover:bg-slate-300"
     >
       <img src="/icons/delete.svg" alt="delete icon" width="16" height="16" />
     </button>
@@ -22,22 +22,19 @@
 
   <h3
     id="title-{{ id }}"
-    class="min-h-7 text-balance border-b-2 border-neutral-200 text-xl font-semibold"
-    [attr.contenteditable]="!lock_state"
     (blur)="saveCard()"
+    [attr.contenteditable]="!lock_state"
+    class="text-balance border-b-2 border-slate-500 text-xl font-semibold text-slate-800"
   >
     {{ title }}
   </h3>
   <p
     id="description-{{ id }}"
-    class="min-h-7 text-pretty"
-    [attr.contenteditable]="!lock_state"
     (blur)="saveCard()"
+    [attr.contenteditable]="!lock_state"
+    class="text-pretty text-slate-700"
   >
     {{ description }}
   </p>
-
-  <span class="text-sm font-light text-neutral-500">
-    Created at: {{ created_at }}
-  </span>
+  <div class="text-sm text-slate-700">Created at: {{ created_at }}</div>
 </div>
