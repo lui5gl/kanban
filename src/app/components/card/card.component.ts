@@ -40,8 +40,8 @@ export class CardComponent implements OnInit {
   }
 
   deleteCard() {
-    let confirm = window.confirm('Are you sure you want to delete this item?');
-    if (confirm) this.delete.emit(this.id);
+    if (confirm('Are you sure you want to delete this item?'))
+      this.delete.emit(this.id);
   }
 
   saveCard() {
@@ -50,8 +50,8 @@ export class CardComponent implements OnInit {
 
     this.save.emit({
       id: this.id,
-      title: titleElement?.textContent ?? '',
-      description: descriptionElement?.textContent ?? '',
+      title: titleElement?.textContent ?? this.title,
+      description: descriptionElement?.textContent ?? this.description,
       is_editable: this.is_editable,
     });
   }
