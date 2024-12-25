@@ -5,12 +5,12 @@
       class="flex h-7 items-center justify-center gap-1 rounded-sm bg-slate-200 px-2 transition-all duration-150 hover:bg-slate-300"
     >
       <img
-        src="/icons/{{ lock_state ? 'unlock' : 'lock' }}.svg"
+        src="/icons/{{ is_editable ? 'unlock' : 'lock' }}.svg"
         alt="lock icon"
         width="16"
         height="16"
       />
-      {{ lock_state ? "Unlock" : "" }}
+      {{ is_editable ? "Unlock" : "" }}
     </button>
     <button
       (click)="deleteCard()"
@@ -23,7 +23,7 @@
   <h3
     id="title-{{ id }}"
     (blur)="saveCard()"
-    [attr.contenteditable]="!lock_state"
+    [attr.contenteditable]="!is_editable"
     class="text-balance border-b-2 border-slate-500 text-xl font-semibold text-slate-800"
   >
     {{ title }}
@@ -31,7 +31,7 @@
   <p
     id="description-{{ id }}"
     (blur)="saveCard()"
-    [attr.contenteditable]="!lock_state"
+    [attr.contenteditable]="!is_editable"
     class="text-pretty text-slate-700"
   >
     {{ description }}

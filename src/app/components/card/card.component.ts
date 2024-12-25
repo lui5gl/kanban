@@ -10,15 +10,15 @@ export class CardComponent implements OnInit {
   @Input() title: string = 'Undefined Title';
   @Input() description: string = 'Undefined description';
   @Input() created_at: string = 'Undefined';
-  @Input() lock_state: boolean = false;
+  @Input() is_editable: boolean = false;
 
-  @Output() delete = new EventEmitter<number>();
   @Output() save = new EventEmitter<{
     id: number;
     title: string;
     description: string;
-    lock_state: boolean;
+    is_editable: boolean;
   }>();
+  @Output() delete = new EventEmitter<number>();
 
   ngOnInit(): void {
     this.loadLockState();
@@ -28,17 +28,13 @@ export class CardComponent implements OnInit {
     let titleElement = document.getElementById(`title-${this.id}`);
     let descriptionElement = document.getElementById(`description-${this.id}`);
 
-    if (this.lock_state) {
-      titleElement?.setAttribute('contenteditable', 'false');
-      descriptionElement?.setAttribute('contenteditable', 'false');
-    } else {
-      titleElement?.setAttribute('contenteditable', 'true');
-      descriptionElement?.setAttribute('contenteditable', 'true');
-    }
+    const contentEditable = this.is_editable ? 'false' : 'true';
+    titleElement?.setAttribute('contenteditable', contentEditable);
+    descriptionElement?.setAttribute('contenteditable', contentEditable);
   }
 
   toggleLockState() {
-    this.lock_state = !this.lock_state;
+    this.is_editable = !this.is_editable;
     this.saveCard();
     this.loadLockState();
   }
@@ -56,7 +52,7 @@ export class CardComponent implements OnInit {
       id: this.id,
       title: titleElement?.textContent ?? '',
       description: descriptionElement?.textContent ?? '',
-      lock_state: this.lock_state,
+      is_editable: this.is_editable,
     });
   }
 }

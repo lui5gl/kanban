@@ -13,7 +13,7 @@ export class ColumnComponent implements OnInit {
     id: number;
     title: string;
     description: string;
-    lock_state: boolean;
+    is_editable: boolean;
     created_at: string;
   }[] = [];
 
@@ -37,7 +37,7 @@ export class ColumnComponent implements OnInit {
       id: newId,
       title: 'New Title',
       description: 'New Description',
-      lock_state: false,
+      is_editable: false,
       created_at: `${year}/${month}/${day}`,
     });
     this.saveCards();
@@ -52,7 +52,7 @@ export class ColumnComponent implements OnInit {
     id: number;
     title: string;
     description: string;
-    lock_state: boolean;
+    is_editable: boolean;
   }): void {
     const index = this.cards.findIndex((i) => i.id === item.id);
 
@@ -61,7 +61,7 @@ export class ColumnComponent implements OnInit {
 
     this.cards[index].title = item.title;
     this.cards[index].description = item.description;
-    this.cards[index].lock_state = item.lock_state;
+    this.cards[index].is_editable = item.is_editable;
     this.saveCards();
   }
 

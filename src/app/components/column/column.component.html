@@ -1,4 +1,4 @@
-<div class="grid gap-5 rounded-sm bg-slate-50/25 p-5 shadow-md">
+<section class="grid gap-5 rounded-sm bg-slate-50/25 p-5 shadow-md">
   <header class="flex justify-between">
     <h2 class="select-none text-2xl font-semibold text-slate-50">
       {{ column_name }}
@@ -17,9 +17,9 @@
       [title]="card.title"
       [description]="card.description"
       [created_at]="card.created_at"
-      [lock_state]="card.lock_state"
+      [is_editable]="card.is_editable"
       (save)="updateCard($event)"
       (delete)="removeCard(card.id)"
     />
   }
-</div>
+</section>
