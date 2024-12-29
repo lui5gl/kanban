@@ -1,8 +1,8 @@
-<section class="flex flex-col gap-1 rounded-sm bg-slate-50 p-4">
+<section class="flex max-w-md flex-col gap-1 rounded-sm bg-neutral-100 p-4">
   <div class="flex justify-between">
     <button
       (click)="toggleLockState()"
-      class="flex h-7 items-center justify-center gap-1 rounded-sm bg-slate-200 px-2 transition-all duration-150 hover:bg-slate-300"
+      class="flex h-7 items-center justify-center gap-1 rounded-sm bg-neutral-200 px-2 transition-all duration-150 hover:bg-neutral-300"
     >
       <img
         src="/icons/{{ is_editable ? 'unlock' : 'lock' }}.svg"
@@ -14,7 +14,7 @@
     </button>
     <button
       (click)="deleteCard()"
-      class="flex h-7 items-center justify-center gap-1 rounded-sm bg-slate-200 px-2 transition-all duration-150 hover:bg-slate-300"
+      class="flex h-7 items-center justify-center gap-1 rounded-sm bg-neutral-200 px-2 transition-all duration-150 hover:bg-neutral-300"
     >
       <img src="/icons/delete.svg" alt="delete icon" width="16" height="16" />
     </button>
@@ -24,7 +24,7 @@
     id="title-{{ id }}"
     (blur)="saveCard()"
     [attr.contenteditable]="!is_editable"
-    class="text-balance border-b-2 border-slate-500 text-xl font-semibold text-slate-800"
+    class="text-balance border-b-2 border-neutral-500 text-xl font-semibold text-neutral-800 selection:bg-neutral-700 selection:text-neutral-100 focus:outline-none"
   >
     {{ title }}
   </h3>
@@ -32,9 +32,13 @@
     id="description-{{ id }}"
     (blur)="saveCard()"
     [attr.contenteditable]="!is_editable"
-    class="text-pretty text-slate-700"
+    class="text-pretty text-neutral-800 selection:bg-neutral-700 selection:text-neutral-100 focus:outline-none"
   >
     {{ description }}
   </p>
-  <div class="text-sm text-slate-700">Created at: {{ created_at }}</div>
+  <div
+    class="text-right text-sm text-neutral-500 selection:bg-neutral-700 selection:text-neutral-100"
+  >
+    Created at: {{ created_at }}
+  </div>
 </section>
