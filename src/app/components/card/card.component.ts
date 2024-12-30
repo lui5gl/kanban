@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  NgModule,
+} from '@angular/core';
 
 @Component({
   selector: 'app-card',
@@ -9,6 +16,7 @@ export class CardComponent implements OnInit {
   @Input() id: number = 0;
   @Input() title: string = 'Undefined Title';
   @Input() description: string = 'Undefined description';
+  @Input() priority: string = 'low';
   @Input() created_at: string = 'Undefined';
   @Input() is_editable: boolean = false;
 
@@ -17,6 +25,7 @@ export class CardComponent implements OnInit {
     title: string;
     description: string;
     is_editable: boolean;
+    priority: string;
   }>();
   @Output() delete = new EventEmitter<number>();
 
@@ -45,13 +54,19 @@ export class CardComponent implements OnInit {
   }
 
   saveCard() {
-    let titleElement = document.getElementById(`title-${this.id}`);
+    let titleElement = document.getElementById(
+      `title-${this.id}`,
+    ) as HTMLElement;
     let descriptionElement = document.getElementById(`description-${this.id}`);
+    let priorityElement = document.getElementById(
+      `priority-${this.id}`,
+    ) as HTMLSelectElement;
 
     this.save.emit({
       id: this.id,
       title: titleElement?.textContent ?? this.title,
       description: descriptionElement?.textContent ?? this.description,
+      priority: priorityElement.value,
       is_editable: this.is_editable,
     });
   }
