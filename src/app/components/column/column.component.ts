@@ -13,9 +13,10 @@ export class ColumnComponent implements OnInit {
     id: number;
     title: string;
     description: string;
-    is_editable: boolean;
     priority: string;
     created_at: string;
+    ends_at: string;
+    is_editable: boolean;
   }[] = [];
 
   ngOnInit(): void {
@@ -40,6 +41,7 @@ export class ColumnComponent implements OnInit {
       description: 'New Description',
       is_editable: false,
       priority: 'low',
+      ends_at: today.toISOString(),
       created_at: `${year}/${month}/${day}`,
     });
     this.saveCards();
@@ -54,18 +56,20 @@ export class ColumnComponent implements OnInit {
     id: number;
     title: string;
     description: string;
+    ends_at: string;
     is_editable: boolean;
     priority: string;
   }): void {
     const index = this.cards.findIndex((i) => i.id === item.id);
 
     if (index === -1)
-      return console.error('The card you are trying to delete does not exist.');
+      return console.error('The card you are trying to update does not exist.');
 
     this.cards[index].title = item.title;
     this.cards[index].description = item.description;
-    this.cards[index].is_editable = item.is_editable;
     this.cards[index].priority = item.priority;
+    this.cards[index].ends_at = item.ends_at;
+    this.cards[index].is_editable = item.is_editable;
     this.saveCards();
   }
 

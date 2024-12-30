@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  NgModule,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-card',
@@ -17,6 +10,7 @@ export class CardComponent implements OnInit {
   @Input() title: string = 'Undefined Title';
   @Input() description: string = 'Undefined description';
   @Input() priority: string = 'low';
+  @Input() ends_at: string = new Date().toISOString();
   @Input() created_at: string = 'Undefined';
   @Input() is_editable: boolean = false;
 
@@ -24,6 +18,7 @@ export class CardComponent implements OnInit {
     id: number;
     title: string;
     description: string;
+    ends_at: string;
     is_editable: boolean;
     priority: string;
   }>();
@@ -37,7 +32,7 @@ export class CardComponent implements OnInit {
     let titleElement = document.getElementById(`title-${this.id}`);
     let descriptionElement = document.getElementById(`description-${this.id}`);
 
-    const contentEditable = this.is_editable ? 'false' : 'true';
+    const contentEditable = this.is_editable ? 'true' : 'false';
     titleElement?.setAttribute('contenteditable', contentEditable);
     descriptionElement?.setAttribute('contenteditable', contentEditable);
   }
@@ -61,12 +56,16 @@ export class CardComponent implements OnInit {
     let priorityElement = document.getElementById(
       `priority-${this.id}`,
     ) as HTMLSelectElement;
+    let endsAtElement = document.getElementById(
+      `ends-at-${this.id}`,
+    ) as HTMLInputElement;
 
     this.save.emit({
       id: this.id,
       title: titleElement?.textContent ?? this.title,
       description: descriptionElement?.textContent ?? this.description,
       priority: priorityElement.value,
+      ends_at: endsAtElement.value,
       is_editable: this.is_editable,
     });
   }
