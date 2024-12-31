@@ -14,7 +14,6 @@ export class ColumnComponent implements OnInit {
     title: string;
     description: string;
     priority: string;
-    created_at: string;
     ends_at: string;
     is_editable: boolean;
   }[] = [];
@@ -31,10 +30,6 @@ export class ColumnComponent implements OnInit {
 
     const today = new Date();
 
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
-
     this.cards.push({
       id: newId,
       title: 'New Title',
@@ -42,7 +37,6 @@ export class ColumnComponent implements OnInit {
       is_editable: false,
       priority: 'low',
       ends_at: today.toISOString(),
-      created_at: `${year}/${month}/${day}`,
     });
     this.saveCards();
   }

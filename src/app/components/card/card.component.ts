@@ -11,7 +11,6 @@ export class CardComponent implements OnInit {
   @Input() description: string = 'Undefined description';
   @Input() priority: string = 'low';
   @Input() ends_at: string = new Date().toISOString();
-  @Input() created_at: string = 'Undefined';
   @Input() is_editable: boolean = false;
 
   @Output() save = new EventEmitter<{
