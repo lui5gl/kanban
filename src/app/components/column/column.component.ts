@@ -36,7 +36,7 @@ export class ColumnComponent implements OnInit {
       description: 'New Description',
       is_editable: false,
       priority: 'low',
-      ends_at: today.toISOString(),
+      ends_at: today.toISOString().split('T')[0],
     });
     this.saveCards();
   }
