@@ -32,21 +32,19 @@
     id="description-{{ id }}"
     (blur)="saveCard()"
     [attr.contenteditable]="!is_editable"
-    class="text-pretty text-neutral-800 selection:bg-neutral-700 selection:text-neutral-100 focus:outline-none"
+    class="text-neutral-800 selection:bg-neutral-700 selection:text-neutral-100 focus:outline-none"
   >
     {{ description }}
   </p>
   <div class="flex justify-between">
     <div class="flex gap-2">
-      <label for="priority" class="font-semibold">Priority:</label>
+      <label class="font-semibold">Priority:</label>
       <select
         id="priority-{{ id }}"
-        name="priority"
-        id="priority"
-        [disabled]="is_editable"
-        class="rounded-sm bg-transparent"
         (change)="saveCard()"
         [value]="priority"
+        [disabled]="is_editable"
+        class="rounded-sm bg-transparent"
       >
         <option value="low">Low</option>
         <option value="medium">Medium</option>
@@ -58,10 +56,10 @@
       <input
         id="ends-at-{{ id }}"
         type="date"
-        class="bg-transparent px-2"
-        (change)="saveCard()"
-        [disabled]="is_editable"
         [value]="ends_at"
+        [disabled]="is_editable"
+        (change)="saveCard()"
+        class="bg-transparent px-2"
       />
     </div>
   </div>

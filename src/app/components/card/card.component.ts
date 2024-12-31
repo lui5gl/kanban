@@ -51,7 +51,9 @@ export class CardComponent implements OnInit {
     let titleElement = document.getElementById(
       `title-${this.id}`,
     ) as HTMLElement;
-    let descriptionElement = document.getElementById(`description-${this.id}`);
+    let descriptionElement = document.getElementById(
+      `description-${this.id}`,
+    ) as HTMLElement;
     let priorityElement = document.getElementById(
       `priority-${this.id}`,
     ) as HTMLSelectElement;
@@ -61,11 +63,11 @@ export class CardComponent implements OnInit {
 
     this.save.emit({
       id: this.id,
-      title: titleElement?.textContent ?? this.title,
-      description: descriptionElement?.textContent ?? this.description,
-      priority: priorityElement.value,
+      title: titleElement.innerText,
+      description: descriptionElement.innerText,
       ends_at: endsAtElement.value,
       is_editable: this.is_editable,
+      priority: priorityElement.value,
     });
   }
 }
