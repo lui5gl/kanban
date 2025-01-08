@@ -70,4 +70,8 @@ export class CardComponent implements OnInit {
       priority: priorityElement.value,
     });
   }
+
+  onDragStart(event: DragEvent) {
+    event.dataTransfer?.setData('text/plain', this.id.toString());
+  }
 }

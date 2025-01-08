@@ -59,15 +59,52 @@ export class ColumnComponent implements OnInit {
     if (index === -1)
       return console.error('The card you are trying to update does not exist.');
 
-    this.cards[index].title = item.title;
-    this.cards[index].description = item.description;
-    this.cards[index].priority = item.priority;
-    this.cards[index].ends_at = item.ends_at;
-    this.cards[index].is_editable = item.is_editable;
+    this.cards[index] = { ...item };
     this.saveCards();
   }
 
   saveCards(): void {
     localStorage.setItem(this.column_name, JSON.stringify(this.cards));
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+
+    const id = parseInt(event.dataTransfer?.getData('text/plain') || '', 10);
+
+    const cardIndex = this.cards.findIndex((card) => card.id === id);
+    if (cardIndex !== -1) {
+      return;
+    }
+
+    const allColumns = ['Todo', 'In progress', 'Done'];
+    let cardToMove: any = null;
+
+    allColumns.forEach((columnName) => {
+      if (columnName !== this.column_name) {
+        const columnCards = JSON.parse(
+          localStorage.getItem(columnName) || '[]',
+        );
+        const card = columnCards.find((item: any) => item.id === id);
+
+        if (card) {
+          cardToMove = card;
+
+          const updatedCards = columnCards.filter(
+            (item: any) => item.id !== id,
+          );
+          localStorage.setItem(columnName, JSON.stringify(updatedCards));
+        }
+      }
+    });
+
+    if (cardToMove) {
+      this.cards.push(cardToMove);
+      this.saveCards();
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
   }
 }
