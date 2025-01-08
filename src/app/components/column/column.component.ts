@@ -19,8 +19,17 @@ export class ColumnComponent implements OnInit {
   }[] = [];
 
   ngOnInit(): void {
+    this.loadCards();
+  }
+
+  loadCards(): void {
     const columnStoredCards = localStorage.getItem(this.column_name);
     this.cards = columnStoredCards ? JSON.parse(columnStoredCards) : [];
+  }
+
+  saveCards(): void {
+    localStorage.setItem(this.column_name, JSON.stringify(this.cards));
+    this.loadCards();
   }
 
   addCard(): void {
@@ -63,10 +72,6 @@ export class ColumnComponent implements OnInit {
     this.saveCards();
   }
 
-  saveCards(): void {
-    localStorage.setItem(this.column_name, JSON.stringify(this.cards));
-  }
-
   onDrop(event: DragEvent): void {
     event.preventDefault();
 
@@ -102,6 +107,7 @@ export class ColumnComponent implements OnInit {
       this.cards.push(cardToMove);
       this.saveCards();
     }
+    location.reload();
   }
 
   onDragOver(event: DragEvent): void {
