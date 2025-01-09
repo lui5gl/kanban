@@ -10,14 +10,12 @@ export class CardComponent implements OnInit {
   @Input() title: string = 'Undefined Title';
   @Input() description: string = 'Undefined description';
   @Input() priority: string = 'low';
-  @Input() ends_at: string = new Date().toISOString();
   @Input() is_editable: boolean = false;
 
   @Output() save = new EventEmitter<{
     id: number;
     title: string;
     description: string;
-    ends_at: string;
     is_editable: boolean;
     priority: string;
   }>();
@@ -57,15 +55,11 @@ export class CardComponent implements OnInit {
     let priorityElement = document.getElementById(
       `priority-${this.id}`,
     ) as HTMLSelectElement;
-    let endsAtElement = document.getElementById(
-      `ends-at-${this.id}`,
-    ) as HTMLInputElement;
 
     this.save.emit({
       id: this.id,
       title: titleElement.innerText,
       description: descriptionElement.innerText,
-      ends_at: endsAtElement.value,
       is_editable: this.is_editable,
       priority: priorityElement.value,
     });

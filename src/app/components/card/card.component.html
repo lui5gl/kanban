@@ -1,78 +1,58 @@
 <section
-  class="max-w-md rounded-md bg-neutral-100"
   draggable="true"
   (dragstart)="onDragStart($event)"
+  class="flex cursor-grab flex-col gap-1 rounded-md bg-neutral-50 p-4"
 >
-  <div
-    class="flex cursor-grab select-none justify-center rounded-t-md bg-neutral-700 py-1"
-  >
-    <img src="icons/drag.svg" alt="drag icon" width="16" height="16" />
+  <div class="flex select-none justify-between">
+    <button
+      (click)="toggleLockState()"
+      class="flex h-7 items-center justify-center gap-1 rounded-sm bg-neutral-200 px-2 transition-all duration-150 hover:bg-neutral-300"
+    >
+      <img
+        src="/icons/{{ is_editable ? 'unlock' : 'lock' }}.svg"
+        alt="lock icon"
+        width="16"
+        height="16"
+      />
+      {{ is_editable ? "Unlock" : "" }}
+    </button>
+    <button
+      (click)="deleteCard()"
+      class="flex h-7 items-center justify-center gap-1 rounded-sm bg-neutral-200 px-2 transition-all duration-150 hover:bg-neutral-300"
+    >
+      <img src="/icons/delete.svg" alt="delete icon" width="16" height="16" />
+    </button>
   </div>
 
-  <div class="grid gap-2 p-4">
-    <div class="flex select-none justify-between">
-      <button
-        (click)="toggleLockState()"
-        class="flex h-7 items-center justify-center gap-1 rounded-sm bg-neutral-200 px-2 transition-all duration-150 hover:bg-neutral-300"
-      >
-        <img
-          src="/icons/{{ is_editable ? 'unlock' : 'lock' }}.svg"
-          alt="lock icon"
-          width="16"
-          height="16"
-        />
-        {{ is_editable ? "Unlock" : "" }}
-      </button>
-      <button
-        (click)="deleteCard()"
-        class="flex h-7 items-center justify-center gap-1 rounded-sm bg-neutral-200 px-2 transition-all duration-150 hover:bg-neutral-300"
-      >
-        <img src="/icons/delete.svg" alt="delete icon" width="16" height="16" />
-      </button>
-    </div>
+  <h3
+    id="title-{{ id }}"
+    (blur)="saveCard()"
+    [attr.contenteditable]="!is_editable"
+    class="cursor-text text-balance border-b-2 border-neutral-500 text-xl font-semibold text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-none"
+  >
+    {{ title }}
+  </h3>
+  <p
+    id="description-{{ id }}"
+    (blur)="saveCard()"
+    [attr.contenteditable]="!is_editable"
+    class="cursor-text text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-none"
+  >
+    {{ description }}
+  </p>
 
-    <h3
-      id="title-{{ id }}"
-      (blur)="saveCard()"
-      [attr.contenteditable]="!is_editable"
-      class="text-balance border-b-2 border-neutral-500 text-xl font-semibold text-neutral-800 selection:bg-neutral-700 selection:text-neutral-100 focus:outline-none"
+  <div class="flex gap-2 self-end text-sm">
+    <label class="font-semibold">Priority:</label>
+    <select
+      id="priority-{{ id }}"
+      (change)="saveCard()"
+      [value]="priority"
+      [disabled]="is_editable"
+      class="rounded-sm bg-transparent"
     >
-      {{ title }}
-    </h3>
-    <p
-      id="description-{{ id }}"
-      (blur)="saveCard()"
-      [attr.contenteditable]="!is_editable"
-      class="text-neutral-800 selection:bg-neutral-700 selection:text-neutral-100 focus:outline-none"
-    >
-      {{ description }}
-    </p>
-    <div class="flex select-none justify-between">
-      <div class="flex gap-2">
-        <label class="font-semibold">Priority:</label>
-        <select
-          id="priority-{{ id }}"
-          (change)="saveCard()"
-          [value]="priority"
-          [disabled]="is_editable"
-          class="rounded-sm bg-transparent"
-        >
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-      </div>
-      <div class="flex">
-        <label for="ends" class="font-semibold">Ends:</label>
-        <input
-          id="ends-at-{{ id }}"
-          type="date"
-          [value]="ends_at"
-          [disabled]="is_editable"
-          (change)="saveCard()"
-          class="bg-transparent px-2"
-        />
-      </div>
-    </div>
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
   </div>
 </section>

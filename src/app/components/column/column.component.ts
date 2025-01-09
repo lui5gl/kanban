@@ -14,7 +14,6 @@ export class ColumnComponent implements OnInit {
     title: string;
     description: string;
     priority: string;
-    ends_at: string;
     is_editable: boolean;
   }[] = [];
 
@@ -45,7 +44,6 @@ export class ColumnComponent implements OnInit {
       description: 'New Description',
       is_editable: false,
       priority: 'low',
-      ends_at: today.toISOString().split('T')[0],
     });
     this.saveCards();
   }
@@ -59,7 +57,6 @@ export class ColumnComponent implements OnInit {
     id: number;
     title: string;
     description: string;
-    ends_at: string;
     is_editable: boolean;
     priority: string;
   }): void {
