@@ -14,6 +14,7 @@ export class ColumnComponent implements OnInit {
     title: string;
     description: string;
     priority: string;
+    column_name: string;
     is_editable: boolean;
   }[] = [];
 
@@ -36,12 +37,11 @@ export class ColumnComponent implements OnInit {
       ? Math.max(...this.cards.map((item) => item.id)) + 1
       : 1;
 
-    const today = new Date();
-
     this.cards.push({
       id: newId,
       title: 'New Title',
       description: 'New Description',
+      column_name: this.column_name,
       is_editable: false,
       priority: 'low',
     });
@@ -58,6 +58,7 @@ export class ColumnComponent implements OnInit {
     title: string;
     description: string;
     is_editable: boolean;
+    column_name: string;
     priority: string;
   }): void {
     const index = this.cards.findIndex((i) => i.id === item.id);

@@ -10,6 +10,7 @@ export class CardComponent implements OnInit {
   @Input() title: string = 'Undefined Title';
   @Input() description: string = 'Undefined description';
   @Input() priority: string = 'low';
+  @Input() column_name: string = 'Undefined column name';
   @Input() is_editable: boolean = false;
 
   @Output() save = new EventEmitter<{
@@ -17,6 +18,7 @@ export class CardComponent implements OnInit {
     title: string;
     description: string;
     is_editable: boolean;
+    column_name: string;
     priority: string;
   }>();
   @Output() delete = new EventEmitter<number>();
@@ -47,13 +49,13 @@ export class CardComponent implements OnInit {
 
   saveCard() {
     let titleElement = document.getElementById(
-      `title-${this.id}`,
+      `${this.column_name}-title-${this.id}`,
     ) as HTMLElement;
     let descriptionElement = document.getElementById(
-      `description-${this.id}`,
+      `${this.column_name}-description-${this.id}`,
     ) as HTMLElement;
     let priorityElement = document.getElementById(
-      `priority-${this.id}`,
+      `${this.column_name}-priority-${this.id}`,
     ) as HTMLSelectElement;
 
     this.save.emit({
@@ -61,6 +63,7 @@ export class CardComponent implements OnInit {
       title: titleElement.innerText,
       description: descriptionElement.innerText,
       is_editable: this.is_editable,
+      column_name: this.column_name,
       priority: priorityElement.value,
     });
   }
