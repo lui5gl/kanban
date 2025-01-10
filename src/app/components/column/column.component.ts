@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { AfterContentChecked, Component, Input } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 
@@ -5,7 +6,7 @@ import { CardComponent } from '../card/card.component';
   selector: 'app-column',
   templateUrl: './column.component.html',
   styles: [],
-  imports: [CardComponent],
+  imports: [CardComponent, NgOptimizedImage],
 })
 export class ColumnComponent implements AfterContentChecked {
   @Input() column_name = 'Undefined column name';

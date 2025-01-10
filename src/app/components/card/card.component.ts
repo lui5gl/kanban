@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  styles: [],
+  imports: [NgOptimizedImage],
 })
 export class CardComponent implements OnInit {
   @Input() id: number = 0;

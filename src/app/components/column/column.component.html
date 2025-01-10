@@ -11,7 +11,7 @@
       (click)="addCard()"
       class="group flex select-none items-center justify-center gap-1 rounded-sm bg-blue-100/25 px-2 font-semibold text-blue-50"
     >
-      <img src="/icons/add.svg" width="16" height="16" alt="Add card" />
+      <img ngSrc="/icons/add.svg" width="16" height="16" alt="Add card" />
       <span class="hidden group-hover:flex group-hover:delay-150">
         Add card
       </span>
@@ -33,6 +33,11 @@
     (click)="addCard()"
     class="flex items-center justify-center rounded-md bg-neutral-50 p-2 transition-all duration-150 hover:bg-neutral-200"
   >
-    <img src="icons/row-insert-bottom.svg" alt="Add card" />
+    <img
+      ngSrc="icons/row-insert-bottom.svg"
+      alt="Add card"
+      width="18"
+      height="18"
+    />
   </button>
 </section>
