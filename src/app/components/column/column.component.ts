@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, Input } from '@angular/core';
 import { CardComponent } from '../card/card.component';
 
 @Component({
@@ -7,7 +7,7 @@ import { CardComponent } from '../card/card.component';
   styles: [],
   imports: [CardComponent],
 })
-export class ColumnComponent implements OnInit {
+export class ColumnComponent implements AfterContentChecked {
   @Input() column_name = 'Undefined column name';
   cards: {
     id: number;
@@ -18,7 +18,7 @@ export class ColumnComponent implements OnInit {
     is_editable: boolean;
   }[] = [];
 
-  ngOnInit(): void {
+  ngAfterContentChecked(): void {
     this.loadCards();
   }
 
@@ -76,9 +76,8 @@ export class ColumnComponent implements OnInit {
     const id = parseInt(event.dataTransfer?.getData('text/plain') || '', 10);
 
     const cardIndex = this.cards.findIndex((card) => card.id === id);
-    if (cardIndex !== -1) {
-      return;
-    }
+
+    if (cardIndex !== -1) return;
 
     const allColumns = ['Todo', 'In progress', 'Done'];
     let cardToMove: any = null;
@@ -105,7 +104,6 @@ export class ColumnComponent implements OnInit {
       this.cards.push(cardToMove);
       this.saveCards();
     }
-    location.reload();
   }
 
   onDragOver(event: DragEvent): void {
