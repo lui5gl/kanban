@@ -1,18 +1,20 @@
 <section
   (drop)="onDrop($event)"
   (dragover)="onDragOver($event)"
-  class="grid gap-4 rounded-md bg-sky-100/25 p-4 shadow-md"
+  class="grid gap-4 rounded-sm bg-blue-100/25 p-4 shadow-md"
 >
   <header class="flex justify-between">
-    <h2 class="select-none text-2xl font-semibold text-sky-50">
+    <h2 class="select-none text-2xl font-semibold text-blue-50">
       {{ column_name }}
     </h2>
     <button
       (click)="addCard()"
-      class="flex select-none items-center justify-center gap-1 rounded-sm bg-sky-100/25 px-2 font-semibold text-sky-50"
+      class="group flex select-none items-center justify-center gap-1 rounded-sm bg-blue-100/25 px-2 font-semibold text-blue-50"
     >
       <img src="/icons/add.svg" width="16" height="16" alt="Add card" />
-      Add card
+      <span class="hidden group-hover:flex group-hover:delay-150">
+        Add card
+      </span>
     </button>
   </header>
   @for (card of cards; track $index) {
