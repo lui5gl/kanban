@@ -8,6 +8,4 @@ import { ColumnComponent } from './components/column/column.component';
   templateUrl: './app.component.html',
   imports: [RouterModule, ColumnComponent, NgOptimizedImage],
 })
-export class AppComponent {
-  title = 'kanban-angular';
-}
+export class AppComponent {}
