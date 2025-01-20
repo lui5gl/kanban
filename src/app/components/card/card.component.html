@@ -28,7 +28,7 @@
     id="{{ column_name }}-title-{{ id }}"
     (blur)="saveCard()"
     [attr.contenteditable]="!is_editable"
-    class="cursor-text text-balance border-b-2 border-neutral-500 text-xl font-semibold text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-none"
+    class="cursor-text break-all border-b-2 border-neutral-500 text-xl font-semibold text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-none"
   >
     {{ title }}
   </h3>
@@ -36,7 +36,7 @@
     id="{{ column_name }}-description-{{ id }}"
     (blur)="saveCard()"
     [attr.contenteditable]="!is_editable"
-    class="cursor-text text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-none"
+    class="cursor-text break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-none"
   >
     {{ description }}
   </p>
