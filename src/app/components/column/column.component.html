@@ -1,7 +1,7 @@
 <section
   (drop)="onDrop($event)"
   (dragover)="onDragOver($event)"
-  class="grid gap-4 rounded-md bg-blue-100/25 p-4 shadow-md"
+  class="grid gap-4 rounded-sm bg-white/25 p-4 shadow-md"
 >
   <header class="flex justify-between">
     <h2 class="select-none text-2xl font-semibold text-blue-50">
@@ -31,7 +31,7 @@
   }
   <button
     (click)="addCard()"
-    class="flex items-center justify-center rounded-md bg-white p-2 transition-all duration-150 hover:bg-blue-100"
+    class="flex items-center justify-center rounded-sm bg-neutral-50 p-2 transition-all duration-150 hover:bg-neutral-100"
   >
     <img
       ngSrc="icons/row-insert-bottom.svg"
