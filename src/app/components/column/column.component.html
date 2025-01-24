@@ -1,7 +1,7 @@
 <section
   (drop)="onDrop($event)"
   (dragover)="onDragOver($event)"
-  class="grid gap-3 rounded-sm bg-neutral-100/15 p-4 shadow-md"
+  class="grid gap-3 rounded-xs bg-neutral-100/15 p-4 shadow-md"
 >
   <header class="flex justify-between">
     <h2 class="select-none text-2xl font-semibold text-blue-50">
@@ -9,7 +9,7 @@
     </h2>
     <button
       (click)="addCard()"
-      class="group flex select-none items-center justify-center gap-1 rounded-sm bg-blue-100/25 px-2 font-semibold text-blue-50"
+      class="group flex select-none items-center justify-center gap-1 rounded-xs bg-blue-100/25 px-2 font-semibold text-blue-50"
     >
       <img ngSrc="/icons/add.svg" width="16" height="16" alt="Add card" />
       <span class="hidden group-hover:flex group-hover:delay-150">
@@ -31,7 +31,7 @@
   }
   <button
     (click)="addCard()"
-    class="flex items-center justify-center rounded-sm bg-neutral-50 p-2 transition-all duration-150 hover:bg-neutral-100"
+    class="flex items-center justify-center rounded-xs bg-neutral-50 p-2 transition-all duration-150 hover:bg-neutral-100"
   >
     <img
       ngSrc="icons/row-insert-bottom.svg"
