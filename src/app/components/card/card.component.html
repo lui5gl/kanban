@@ -1,12 +1,12 @@
 <section
   draggable="true"
   (dragstart)="onDragStart($event)"
-  class="flex cursor-grab flex-col gap-1 rounded-xs bg-neutral-50 p-4"
+  class="flex cursor-grab flex-col gap-1 rounded-sm bg-slate-50 p-4 text-slate-700"
 >
-  <div class="flex select-none justify-between">
+  <div class="flex justify-between select-none">
     <button
       (click)="toggleLockState()"
-      class="flex h-7 items-center justify-center gap-1 rounded-xs bg-neutral-200 px-2 transition-all duration-150 hover:bg-neutral-300"
+      class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
     >
       <img
         ngSrc="/icons/{{ is_editable ? 'unlock' : 'lock' }}.svg"
@@ -14,11 +14,10 @@
         width="16"
         height="16"
       />
-      {{ is_editable ? "Unlock" : "" }}
     </button>
     <button
       (click)="deleteCard()"
-      class="flex h-7 items-center justify-center gap-1 rounded-xs bg-neutral-200 px-2 transition-all duration-150 hover:bg-neutral-300"
+      class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
     >
       <img ngSrc="/icons/delete.svg" alt="delete icon" width="16" height="16" />
     </button>
@@ -28,7 +27,7 @@
     id="{{ column_name }}-title-{{ id }}"
     (blur)="saveCard()"
     [attr.contenteditable]="!is_editable"
-    class="cursor-text break-all border-b-2 border-neutral-500 text-xl font-semibold text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
+    class="cursor-text border-b-2 border-slate-200 text-xl font-semibold break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
   >
     {{ title }}
   </h3>
