@@ -6,7 +6,10 @@
   [class.cursor-not-allowed]="is_archived"
   [class.cursor-grab]="!is_archived"
 >
-  <div cdkDragHandle class="flex justify-between select-none">
+  <div
+    cdkDragHandle
+    class="flex w-full items-center justify-between select-none"
+  >
     <button
       (click)="toggleLockState()"
       class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
@@ -19,24 +22,26 @@
         height="16"
       />
     </button>
-    <button
-      (click)="toggleArchiveState()"
-      class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
-      [attr.title]="is_archived ? 'Desarchivar' : 'Archivar'"
-    >
-      <img
-        ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
-        alt="{{ is_archived ? 'Icono de desarchivar' : 'Icono de archivar' }}"
-        width="16"
-        height="16"
-      />
-    </button>
-    <button
-      (click)="deleteCard()"
-      class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
-    >
-      <img ngSrc="/icons/delete.svg" alt="Icono de eliminar" width="16" height="16" />
-    </button>
+    <div class="flex items-center gap-2">
+      <button
+        (click)="toggleArchiveState()"
+        class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
+        [attr.title]="is_archived ? 'Desarchivar' : 'Archivar'"
+      >
+        <img
+          ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
+          alt="{{ is_archived ? 'Icono de desarchivar' : 'Icono de archivar' }}"
+          width="16"
+          height="16"
+        />
+      </button>
+      <button
+        (click)="deleteCard()"
+        class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
+      >
+        <img ngSrc="/icons/delete.svg" alt="Icono de eliminar" width="16" height="16" />
+      </button>
+    </div>
   </div>
 
   <h3
