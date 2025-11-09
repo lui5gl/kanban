@@ -1,6 +1,6 @@
 import { DatePipe, NgIf, NgOptimizedImage } from '@angular/common';
 import { Dialog } from '@angular/cdk/dialog';
-import { CdkDrag } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import {
   Component,
   EventEmitter,
@@ -14,7 +14,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  imports: [NgOptimizedImage, CdkDrag, DatePipe, NgIf],
+  imports: [NgOptimizedImage, CdkDrag, CdkDragHandle, DatePipe, NgIf],
 })
 export class CardComponent {
   @Input() id: number = 0;
