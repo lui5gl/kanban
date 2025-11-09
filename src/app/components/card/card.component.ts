@@ -25,6 +25,7 @@ export class CardComponent {
   @Input() is_archived: boolean = false;
   @Input() createdAt: string = new Date().toISOString();
   @Input() updatedAt: string = new Date().toISOString();
+  @Input() dueDate: string = new Date().toISOString().split('T')[0];
   isActionMenuOpen = false;
 
   @Output() save = new EventEmitter<{
@@ -36,6 +37,7 @@ export class CardComponent {
     is_archived: boolean;
     createdAt: string;
     updatedAt: string;
+    dueDate: string;
   }>();
   @Output() delete = new EventEmitter<number>();
 
@@ -74,21 +76,27 @@ export class CardComponent {
     let priorityElement = document.getElementById(
       this.getElementId('priority'),
     ) as HTMLSelectElement;
+    let dueDateElement = document.getElementById(
+      this.getElementId('dueDate'),
+    ) as HTMLInputElement;
 
     const newTitle = titleElement?.innerText ?? this.title;
     const newDescription = descriptionElement?.innerText ?? this.description;
     const newPriority = priorityElement?.value ?? this.priority;
+    const newDueDate = dueDateElement?.value || this.dueDate;
 
     const hasContentChange =
       newTitle !== this.title ||
       newDescription !== this.description ||
-      newPriority !== this.priority;
+      newPriority !== this.priority ||
+      newDueDate !== this.dueDate;
 
     if (!forceUpdate && !hasContentChange) return;
 
     this.title = newTitle;
     this.description = newDescription;
     this.priority = newPriority;
+    this.dueDate = newDueDate;
 
     if (hasContentChange || forceUpdate) {
       this.updatedAt = new Date().toISOString();
@@ -103,6 +111,7 @@ export class CardComponent {
       is_archived: this.is_archived,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      dueDate: this.dueDate,
     });
   }
 
@@ -123,7 +132,7 @@ export class CardComponent {
     this.saveCard(true);
   }
 
-  getElementId(field: 'title' | 'description' | 'priority'): string {
+  getElementId(field: 'title' | 'description' | 'priority' | 'dueDate'): string {
     return `${this.columnIdPrefix}-${field}-${this.id}`;
   }
 

@@ -18,6 +18,7 @@ type ColumnCard = {
   is_archived: boolean;
   createdAt: string;
   updatedAt: string;
+  dueDate: string;
 };
 
 @Component({
@@ -66,6 +67,9 @@ export class ColumnComponent implements AfterContentChecked {
             is_archived: card.is_archived ?? false,
             createdAt: card.createdAt ?? fallback,
             updatedAt: card.updatedAt ?? fallback,
+            dueDate:
+              card.dueDate ??
+              new Date(fallback).toISOString().split('T')[0],
           };
         })
       : [];
@@ -92,6 +96,7 @@ export class ColumnComponent implements AfterContentChecked {
       is_archived: false,
       createdAt: timestamp,
       updatedAt: timestamp,
+      dueDate: new Date(timestamp).toISOString().split('T')[0],
     });
     this.arrangeCards();
     this.saveCards();

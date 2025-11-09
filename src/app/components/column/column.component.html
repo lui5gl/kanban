@@ -17,9 +17,10 @@
       [column_name]="column_name"
       [description]="card.description"
       [priority]="card.priority"
-      [is_archived]="card.is_archived"
-      [createdAt]="card.createdAt"
-      [updatedAt]="card.updatedAt"
+        [is_archived]="card.is_archived"
+        [createdAt]="card.createdAt"
+        [updatedAt]="card.updatedAt"
+        [dueDate]="card.dueDate"
       (save)="updateCard($event)"
       (delete)="removeCard(card.id)"
     />

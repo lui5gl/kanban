@@ -80,7 +80,7 @@
     <div
       class="mt-2 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600"
     >
-      <div class="flex items-center gap-2 text-sm text-slate-700">
+      <div class="flex flex-col gap-1 text-sm text-slate-700">
         <label class="font-semibold">Prioridad:</label>
         <select
           [attr.id]="getElementId('priority')"
@@ -93,6 +93,15 @@
           <option value="medium">Media</option>
           <option value="high">Alta</option>
         </select>
+        <label class="font-semibold">Entrega aproximada:</label>
+        <input
+          type="date"
+          [attr.id]="getElementId('dueDate')"
+          [value]="dueDate"
+          (change)="saveCard()"
+          [disabled]="is_archived"
+          class="rounded-sm border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700"
+        />
       </div>
       <div class="flex flex-col gap-0.5 text-right">
         <span>Creada: {{ createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
