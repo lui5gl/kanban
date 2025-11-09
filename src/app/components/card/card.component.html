@@ -1,33 +1,50 @@
 <section
   cdkDrag
   [cdkDragDisabled]="is_archived"
-  class="flex flex-col gap-1 rounded-sm bg-slate-50 p-4 text-slate-700"
+  class="relative flex flex-col gap-1 rounded-sm bg-slate-50 p-4 text-slate-700"
   [class.opacity-60]="is_archived"
   [class.cursor-not-allowed]="is_archived"
-  [class.cursor-grab]="!is_archived"
 >
-  <div
-    cdkDragHandle
-    class="flex w-full items-center justify-end gap-2 select-none"
-  >
+  <div class="absolute right-2 top-2 flex select-none">
     <button
-      (click)="toggleArchiveState()"
+      (click)="toggleMenu($event)"
       class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
-      [attr.title]="is_archived ? 'Desarchivar' : 'Archivar'"
+      type="button"
     >
       <img
-        ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
-        alt="{{ is_archived ? 'Icono de desarchivar' : 'Icono de archivar' }}"
+        ngSrc="/icons/menu-2.svg"
+        alt="Abrir menú de acciones"
         width="16"
         height="16"
       />
     </button>
-    <button
-      (click)="deleteCard()"
-      class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
+    <div
+      *ngIf="isActionMenuOpen"
+      (click)="$event.stopPropagation()"
+      class="absolute right-0 top-10 z-20 flex w-40 flex-col rounded-md border border-slate-200 bg-white text-sm shadow-lg"
     >
-      <img ngSrc="/icons/delete.svg" alt="Icono de eliminar" width="16" height="16" />
-    </button>
+      <button
+        type="button"
+        class="flex items-center gap-2 px-3 py-2 text-left text-slate-600 transition hover:bg-slate-100"
+        (click)="toggleArchiveState($event)"
+      >
+        <img
+          ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
+          alt="{{ is_archived ? 'Desarchivar' : 'Archivar' }}"
+          width="16"
+          height="16"
+        />
+        {{ is_archived ? 'Desarchivar' : 'Archivar' }}
+      </button>
+      <button
+        type="button"
+        class="flex items-center gap-2 px-3 py-2 text-left text-slate-600 transition hover:bg-slate-100"
+        (click)="deleteCard($event)"
+      >
+        <img ngSrc="/icons/delete.svg" alt="Eliminar" width="16" height="16" />
+        Eliminar
+      </button>
+    </div>
   </div>
 
   <h3

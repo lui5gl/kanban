@@ -1,14 +1,20 @@
-import { DatePipe, NgOptimizedImage } from '@angular/common';
+import { DatePipe, NgIf, NgOptimizedImage } from '@angular/common';
 import { Dialog } from '@angular/cdk/dialog';
-import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CdkDrag } from '@angular/cdk/drag-drop';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  imports: [NgOptimizedImage, CdkDrag, CdkDragHandle, DatePipe],
+  imports: [NgOptimizedImage, CdkDrag, DatePipe, NgIf],
 })
 export class CardComponent {
   @Input() id: number = 0;
@@ -19,6 +25,7 @@ export class CardComponent {
   @Input() is_archived: boolean = false;
   @Input() createdAt: string = new Date().toISOString();
   @Input() updatedAt: string = new Date().toISOString();
+  isActionMenuOpen = false;
 
   @Output() save = new EventEmitter<{
     id: number;
@@ -34,12 +41,25 @@ export class CardComponent {
 
   constructor(private dialog: Dialog) {}
 
-  async deleteCard() {
+  @HostListener('document:click')
+  closeMenu() {
+    this.isActionMenuOpen = false;
+  }
+
+  toggleMenu(event: MouseEvent) {
+    event.stopPropagation();
+    this.isActionMenuOpen = !this.isActionMenuOpen;
+  }
+
+  async deleteCard(event?: MouseEvent) {
+    event?.stopPropagation();
     const confirmed = await this.openConfirmDialog({
       title: 'Eliminar tarjeta',
       description: 'Esta acción no se puede deshacer.',
       confirmLabel: 'Eliminar',
     });
+
+    this.isActionMenuOpen = false;
 
     if (confirmed) this.delete.emit(this.id);
   }
@@ -69,7 +89,8 @@ export class CardComponent {
     });
   }
 
-  async toggleArchiveState() {
+  async toggleArchiveState(event?: MouseEvent) {
+    event?.stopPropagation();
     const confirmed = await this.openConfirmDialog({
       title: this.is_archived ? 'Desarchivar tarjeta' : 'Archivar tarjeta',
       description: this.is_archived
@@ -80,6 +101,7 @@ export class CardComponent {
 
     if (!confirmed) return;
 
+    this.isActionMenuOpen = false;
     this.is_archived = !this.is_archived;
     this.saveCard();
   }
