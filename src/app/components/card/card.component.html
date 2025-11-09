@@ -61,18 +61,26 @@
     {{ description }}
   </p>
 
-  <div class="flex gap-2 self-end text-sm">
-    <label class="font-semibold">Prioridad:</label>
-    <select
-      [attr.id]="getElementId('priority')"
-      (change)="saveCard()"
-      [value]="priority"
-      [disabled]="!is_editable || is_archived"
-      class="rounded-xs bg-transparent"
-    >
-      <option value="low">Baja</option>
-      <option value="medium">Media</option>
-      <option value="high">Alta</option>
-    </select>
+  <div
+    class="mt-2 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600"
+  >
+    <div class="flex items-center gap-2 text-sm text-slate-700">
+      <label class="font-semibold">Prioridad:</label>
+      <select
+        [attr.id]="getElementId('priority')"
+        (change)="saveCard()"
+        [value]="priority"
+        [disabled]="!is_editable || is_archived"
+        class="rounded-xs bg-transparent"
+      >
+        <option value="low">Baja</option>
+        <option value="medium">Media</option>
+        <option value="high">Alta</option>
+      </select>
+    </div>
+    <div class="flex flex-col gap-0.5 text-right">
+      <span>Creada: {{ createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      <span>Actualizada: {{ updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+    </div>
   </div>
 </section>

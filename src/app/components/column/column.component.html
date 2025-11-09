@@ -19,6 +19,8 @@
       [priority]="card.priority"
       [is_editable]="card.is_editable"
       [is_archived]="card.is_archived"
+      [createdAt]="card.createdAt"
+      [updatedAt]="card.updatedAt"
       (save)="updateCard($event)"
       (delete)="removeCard(card.id)"
     />

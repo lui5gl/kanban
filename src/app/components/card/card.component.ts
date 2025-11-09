@@ -1,11 +1,11 @@
-import { NgOptimizedImage } from '@angular/common';
+import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  imports: [NgOptimizedImage, CdkDrag, CdkDragHandle],
+  imports: [NgOptimizedImage, CdkDrag, CdkDragHandle, DatePipe],
 })
 export class CardComponent implements OnInit {
   @Input() id: number = 0;
@@ -15,6 +15,8 @@ export class CardComponent implements OnInit {
   @Input() column_name: string = 'Columna sin nombre';
   @Input() is_editable: boolean = false;
   @Input() is_archived: boolean = false;
+  @Input() createdAt: string = new Date().toISOString();
+  @Input() updatedAt: string = new Date().toISOString();
 
   @Output() save = new EventEmitter<{
     id: number;
@@ -24,6 +26,8 @@ export class CardComponent implements OnInit {
     column_name: string;
     priority: string;
     is_archived: boolean;
+    createdAt: string;
+    updatedAt: string;
   }>();
   @Output() delete = new EventEmitter<number>();
 
@@ -67,6 +71,8 @@ export class CardComponent implements OnInit {
       this.getElementId('priority'),
     ) as HTMLSelectElement;
 
+    this.updatedAt = new Date().toISOString();
+
     this.save.emit({
       id: this.id,
       title: titleElement?.innerText ?? this.title,
@@ -75,6 +81,8 @@ export class CardComponent implements OnInit {
       column_name: this.column_name,
       priority: priorityElement?.value ?? this.priority,
       is_archived: this.is_archived,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     });
   }
 

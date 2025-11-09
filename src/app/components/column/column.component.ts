@@ -16,6 +16,8 @@ type ColumnCard = {
   column_name: string;
   is_editable: boolean;
   is_archived: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
 
 @Component({
@@ -36,10 +38,15 @@ export class ColumnComponent implements AfterContentChecked {
   loadCards(): void {
     const columnStoredCards = localStorage.getItem(this.column_name);
     this.cards = columnStoredCards
-      ? (JSON.parse(columnStoredCards) as ColumnCard[]).map((card) => ({
-          ...card,
-          is_archived: card.is_archived ?? false,
-        }))
+      ? (JSON.parse(columnStoredCards) as ColumnCard[]).map((card) => {
+          const fallback = card.createdAt ?? card.updatedAt ?? new Date().toISOString();
+          return {
+            ...card,
+            is_archived: card.is_archived ?? false,
+            createdAt: card.createdAt ?? fallback,
+            updatedAt: card.updatedAt ?? fallback,
+          };
+        })
       : [];
     this.moveArchivedToBottom(this.cards);
   }
@@ -53,6 +60,7 @@ export class ColumnComponent implements AfterContentChecked {
     const newId = this.cards.length
       ? Math.max(...this.cards.map((item) => item.id)) + 1
       : 1;
+    const timestamp = new Date().toISOString();
 
     this.cards.push({
       id: newId,
@@ -62,6 +70,8 @@ export class ColumnComponent implements AfterContentChecked {
       is_editable: false,
       priority: 'low',
       is_archived: false,
+      createdAt: timestamp,
+      updatedAt: timestamp,
     });
     this.saveCards();
   }
@@ -98,6 +108,7 @@ export class ColumnComponent implements AfterContentChecked {
 
     const movedCard = event.container.data[event.currentIndex];
     movedCard.column_name = this.column_name;
+    movedCard.updatedAt = new Date().toISOString();
     this.moveArchivedToBottom(event.container.data);
 
     const previousColumnName = this.getColumnNameFromDropListId(
