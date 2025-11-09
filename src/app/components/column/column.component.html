@@ -10,7 +10,7 @@
     {{ column_name }}
   </h2>
 
-  @for (card of cards; track $index) {
+  @for (card of cards; track card.id) {
     <app-card
       [id]="card.id"
       [title]="card.title"
