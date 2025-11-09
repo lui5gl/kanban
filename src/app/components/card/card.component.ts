@@ -1,19 +1,18 @@
 import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   imports: [NgOptimizedImage, CdkDrag, CdkDragHandle, DatePipe],
 })
-export class CardComponent implements OnInit {
+export class CardComponent {
   @Input() id: number = 0;
   @Input() title: string = 'Titulo sin definir';
   @Input() description: string = 'Descripcion sin definir';
   @Input() priority: string = 'low';
   @Input() column_name: string = 'Columna sin nombre';
-  @Input() is_editable: boolean = false;
   @Input() is_archived: boolean = false;
   @Input() createdAt: string = new Date().toISOString();
   @Input() updatedAt: string = new Date().toISOString();
@@ -22,7 +21,6 @@ export class CardComponent implements OnInit {
     id: number;
     title: string;
     description: string;
-    is_editable: boolean;
     column_name: string;
     priority: string;
     is_archived: boolean;
@@ -30,30 +28,6 @@ export class CardComponent implements OnInit {
     updatedAt: string;
   }>();
   @Output() delete = new EventEmitter<number>();
-
-  ngOnInit(): void {
-    this.loadLockState();
-  }
-
-  loadLockState() {
-    let titleElement = document.getElementById(this.getElementId('title'));
-    let descriptionElement = document.getElementById(
-      this.getElementId('description'),
-    );
-
-    const contentEditable =
-      this.is_archived || !this.is_editable ? 'false' : 'true';
-    titleElement?.setAttribute('contenteditable', contentEditable);
-    descriptionElement?.setAttribute('contenteditable', contentEditable);
-  }
-
-  toggleLockState() {
-    if (this.is_archived) return;
-
-    this.is_editable = !this.is_editable;
-    this.saveCard();
-    this.loadLockState();
-  }
 
   deleteCard() {
     if (confirm('Estas seguro de eliminar esta tarjeta?'))
@@ -77,7 +51,6 @@ export class CardComponent implements OnInit {
       id: this.id,
       title: titleElement?.innerText ?? this.title,
       description: descriptionElement?.innerText ?? this.description,
-      is_editable: this.is_editable,
       column_name: this.column_name,
       priority: priorityElement?.value ?? this.priority,
       is_archived: this.is_archived,
@@ -88,10 +61,6 @@ export class CardComponent implements OnInit {
 
   toggleArchiveState() {
     this.is_archived = !this.is_archived;
-    if (this.is_archived && this.is_editable) {
-      this.is_editable = false;
-    }
-    this.loadLockState();
     this.saveCard();
   }
 

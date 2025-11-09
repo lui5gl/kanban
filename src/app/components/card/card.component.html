@@ -8,46 +8,32 @@
 >
   <div
     cdkDragHandle
-    class="flex w-full items-center justify-between select-none"
+    class="flex w-full items-center justify-end gap-2 select-none"
   >
     <button
-      (click)="toggleLockState()"
+      (click)="toggleArchiveState()"
       class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
-      [disabled]="is_archived"
+      [attr.title]="is_archived ? 'Desarchivar' : 'Archivar'"
     >
       <img
-        ngSrc="/icons/{{ is_editable ? 'unlock' : 'lock' }}.svg"
-        alt="Icono de candado"
+        ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
+        alt="{{ is_archived ? 'Icono de desarchivar' : 'Icono de archivar' }}"
         width="16"
         height="16"
       />
     </button>
-    <div class="flex items-center gap-2">
-      <button
-        (click)="toggleArchiveState()"
-        class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
-        [attr.title]="is_archived ? 'Desarchivar' : 'Archivar'"
-      >
-        <img
-          ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
-          alt="{{ is_archived ? 'Icono de desarchivar' : 'Icono de archivar' }}"
-          width="16"
-          height="16"
-        />
-      </button>
-      <button
-        (click)="deleteCard()"
-        class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
-      >
-        <img ngSrc="/icons/delete.svg" alt="Icono de eliminar" width="16" height="16" />
-      </button>
-    </div>
+    <button
+      (click)="deleteCard()"
+      class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
+    >
+      <img ngSrc="/icons/delete.svg" alt="Icono de eliminar" width="16" height="16" />
+    </button>
   </div>
 
   <h3
     [attr.id]="getElementId('title')"
     (blur)="saveCard()"
-    [attr.contenteditable]="is_archived ? 'false' : is_editable ? 'true' : 'false'"
+    [attr.contenteditable]="is_archived ? 'false' : 'true'"
     class="cursor-text border-b-2 border-slate-200 text-xl font-semibold break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
   >
     {{ title }}
@@ -55,7 +41,7 @@
   <p
     [attr.id]="getElementId('description')"
     (blur)="saveCard()"
-    [attr.contenteditable]="is_archived ? 'false' : is_editable ? 'true' : 'false'"
+    [attr.contenteditable]="is_archived ? 'false' : 'true'"
     class="cursor-text break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
   >
     {{ description }}
@@ -70,7 +56,7 @@
         [attr.id]="getElementId('priority')"
         (change)="saveCard()"
         [value]="priority"
-        [disabled]="!is_editable || is_archived"
+        [disabled]="is_archived"
         class="rounded-xs bg-transparent"
       >
         <option value="low">Baja</option>

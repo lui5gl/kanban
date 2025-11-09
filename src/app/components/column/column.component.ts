@@ -14,7 +14,6 @@ type ColumnCard = {
   description: string;
   priority: string;
   column_name: string;
-  is_editable: boolean;
   is_archived: boolean;
   createdAt: string;
   updatedAt: string;
@@ -67,7 +66,6 @@ export class ColumnComponent implements AfterContentChecked {
       title: 'Nuevo titulo',
       description: 'Nueva descripcion',
       column_name: this.column_name,
-      is_editable: false,
       priority: 'low',
       is_archived: false,
       createdAt: timestamp,
