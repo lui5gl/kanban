@@ -23,7 +23,7 @@
   </div>
 
   <h3
-    id="{{ column_name }}-title-{{ id }}"
+    [attr.id]="getElementId('title')"
     (blur)="saveCard()"
     [attr.contenteditable]="!is_editable"
     class="cursor-text border-b-2 border-slate-200 text-xl font-semibold break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
@@ -31,7 +31,7 @@
     {{ title }}
   </h3>
   <p
-    id="{{ column_name }}-description-{{ id }}"
+    [attr.id]="getElementId('description')"
     (blur)="saveCard()"
     [attr.contenteditable]="!is_editable"
     class="cursor-text break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
@@ -42,7 +42,7 @@
   <div class="flex gap-2 self-end text-sm">
     <label class="font-semibold">Priority:</label>
     <select
-      id="{{ column_name }}-priority-{{ id }}"
+      [attr.id]="getElementId('priority')"
       (change)="saveCard()"
       [value]="priority"
       [disabled]="is_editable"

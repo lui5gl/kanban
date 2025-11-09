@@ -30,8 +30,10 @@ export class CardComponent implements OnInit {
   }
 
   loadLockState() {
-    let titleElement = document.getElementById(`title-${this.id}`);
-    let descriptionElement = document.getElementById(`description-${this.id}`);
+    let titleElement = document.getElementById(this.getElementId('title'));
+    let descriptionElement = document.getElementById(
+      this.getElementId('description'),
+    );
 
     const contentEditable = this.is_editable ? 'true' : 'false';
     titleElement?.setAttribute('contenteditable', contentEditable);
@@ -51,13 +53,13 @@ export class CardComponent implements OnInit {
 
   saveCard() {
     let titleElement = document.getElementById(
-      `${this.column_name}-title-${this.id}`,
+      this.getElementId('title'),
     ) as HTMLElement;
     let descriptionElement = document.getElementById(
-      `${this.column_name}-description-${this.id}`,
+      this.getElementId('description'),
     ) as HTMLElement;
     let priorityElement = document.getElementById(
-      `${this.column_name}-priority-${this.id}`,
+      this.getElementId('priority'),
     ) as HTMLSelectElement;
 
     this.save.emit({
@@ -68,5 +70,13 @@ export class CardComponent implements OnInit {
       column_name: this.column_name,
       priority: priorityElement.value,
     });
+  }
+
+  getElementId(field: 'title' | 'description' | 'priority'): string {
+    return `${this.columnIdPrefix}-${field}-${this.id}`;
+  }
+
+  private get columnIdPrefix(): string {
+    return this.column_name.toLowerCase().replace(/\s+/g, '-');
   }
 }
