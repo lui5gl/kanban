@@ -30,3 +30,13 @@
 .cdk-drag-placeholder {
   opacity: 0;
 }
+
+.app-dialog-backdrop {
+  background-color: rgb(15 23 42 / 0.55);
+}
+
+.app-dialog-panel {
+  border-radius: 0.5rem;
+  background-color: #fff;
+  box-shadow: 0 25px 50px -12px rgb(15 23 42 / 0.45);
+}

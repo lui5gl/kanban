@@ -1,6 +1,9 @@
 import { DatePipe, NgOptimizedImage } from '@angular/common';
+import { Dialog } from '@angular/cdk/dialog';
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-card',
@@ -29,9 +32,16 @@ export class CardComponent {
   }>();
   @Output() delete = new EventEmitter<number>();
 
-  deleteCard() {
-    if (confirm('Estas seguro de eliminar esta tarjeta?'))
-      this.delete.emit(this.id);
+  constructor(private dialog: Dialog) {}
+
+  async deleteCard() {
+    const confirmed = await this.openConfirmDialog({
+      title: 'Eliminar tarjeta',
+      description: 'Esta acción no se puede deshacer.',
+      confirmLabel: 'Eliminar',
+    });
+
+    if (confirmed) this.delete.emit(this.id);
   }
 
   saveCard() {
@@ -59,7 +69,17 @@ export class CardComponent {
     });
   }
 
-  toggleArchiveState() {
+  async toggleArchiveState() {
+    const confirmed = await this.openConfirmDialog({
+      title: this.is_archived ? 'Desarchivar tarjeta' : 'Archivar tarjeta',
+      description: this.is_archived
+        ? 'La tarjeta volverá a estar visible y editable.'
+        : 'La tarjeta se ocultará en la sección de archivadas.',
+      confirmLabel: this.is_archived ? 'Desarchivar' : 'Archivar',
+    });
+
+    if (!confirmed) return;
+
     this.is_archived = !this.is_archived;
     this.saveCard();
   }
@@ -70,5 +90,21 @@ export class CardComponent {
 
   private get columnIdPrefix(): string {
     return this.column_name.toLowerCase().replace(/\s+/g, '-');
+  }
+
+  private async openConfirmDialog(data: {
+    title: string;
+    description: string;
+    confirmLabel?: string;
+    cancelLabel?: string;
+  }): Promise<boolean> {
+    const dialogRef = this.dialog.open<boolean>(ConfirmDialogComponent, {
+      data,
+      disableClose: true,
+      panelClass: 'app-dialog-panel',
+      backdropClass: 'app-dialog-backdrop',
+    });
+
+    return !!(await firstValueFrom(dialogRef.closed));
   }
 }
