@@ -1,9 +1,8 @@
 <section
-  draggable="true"
-  (dragstart)="onDragStart($event)"
+  cdkDrag
   class="flex cursor-grab flex-col gap-1 rounded-sm bg-slate-50 p-4 text-slate-700"
 >
-  <div class="flex justify-between select-none">
+  <div cdkDragHandle class="flex justify-between select-none">
     <button
       (click)="toggleLockState()"
       class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"

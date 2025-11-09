@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, CdkDrag, CdkDragHandle],
 })
 export class CardComponent implements OnInit {
   @Input() id: number = 0;
@@ -67,9 +68,5 @@ export class CardComponent implements OnInit {
       column_name: this.column_name,
       priority: priorityElement.value,
     });
-  }
-
-  onDragStart(event: DragEvent) {
-    event.dataTransfer?.setData('text/plain', this.id.toString());
   }
 }
