@@ -64,7 +64,7 @@ export class CardComponent {
     if (confirmed) this.delete.emit(this.id);
   }
 
-  saveCard() {
+  saveCard(forceUpdate = false) {
     let titleElement = document.getElementById(
       this.getElementId('title'),
     ) as HTMLElement;
@@ -75,14 +75,31 @@ export class CardComponent {
       this.getElementId('priority'),
     ) as HTMLSelectElement;
 
-    this.updatedAt = new Date().toISOString();
+    const newTitle = titleElement?.innerText ?? this.title;
+    const newDescription = descriptionElement?.innerText ?? this.description;
+    const newPriority = priorityElement?.value ?? this.priority;
+
+    const hasContentChange =
+      newTitle !== this.title ||
+      newDescription !== this.description ||
+      newPriority !== this.priority;
+
+    if (!forceUpdate && !hasContentChange) return;
+
+    this.title = newTitle;
+    this.description = newDescription;
+    this.priority = newPriority;
+
+    if (hasContentChange || forceUpdate) {
+      this.updatedAt = new Date().toISOString();
+    }
 
     this.save.emit({
       id: this.id,
-      title: titleElement?.innerText ?? this.title,
-      description: descriptionElement?.innerText ?? this.description,
+      title: this.title,
+      description: this.description,
       column_name: this.column_name,
-      priority: priorityElement?.value ?? this.priority,
+      priority: this.priority,
       is_archived: this.is_archived,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
@@ -103,7 +120,7 @@ export class CardComponent {
 
     this.isActionMenuOpen = false;
     this.is_archived = !this.is_archived;
-    this.saveCard();
+    this.saveCard(true);
   }
 
   getElementId(field: 'title' | 'description' | 'priority'): string {
