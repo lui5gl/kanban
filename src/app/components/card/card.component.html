@@ -9,7 +9,7 @@
     >
       <img
         ngSrc="/icons/{{ is_editable ? 'unlock' : 'lock' }}.svg"
-        alt="lock icon"
+        alt="Icono de candado"
         width="16"
         height="16"
       />
@@ -18,7 +18,7 @@
       (click)="deleteCard()"
       class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
     >
-      <img ngSrc="/icons/delete.svg" alt="delete icon" width="16" height="16" />
+      <img ngSrc="/icons/delete.svg" alt="Icono de eliminar" width="16" height="16" />
     </button>
   </div>
 
@@ -40,7 +40,7 @@
   </p>
 
   <div class="flex gap-2 self-end text-sm">
-    <label class="font-semibold">Priority:</label>
+    <label class="font-semibold">Prioridad:</label>
     <select
       [attr.id]="getElementId('priority')"
       (change)="saveCard()"
@@ -48,9 +48,9 @@
       [disabled]="is_editable"
       class="rounded-xs bg-transparent"
     >
-      <option value="low">Low</option>
-      <option value="medium">Medium</option>
-      <option value="high">High</option>
+      <option value="low">Baja</option>
+      <option value="medium">Media</option>
+      <option value="high">Alta</option>
     </select>
   </div>
 </section>

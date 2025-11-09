@@ -9,10 +9,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class CardComponent implements OnInit {
   @Input() id: number = 0;
-  @Input() title: string = 'Undefined Title';
-  @Input() description: string = 'Undefined description';
+  @Input() title: string = 'Titulo sin definir';
+  @Input() description: string = 'Descripcion sin definir';
   @Input() priority: string = 'low';
-  @Input() column_name: string = 'Undefined column name';
+  @Input() column_name: string = 'Columna sin nombre';
   @Input() is_editable: boolean = false;
 
   @Output() save = new EventEmitter<{
@@ -47,7 +47,7 @@ export class CardComponent implements OnInit {
   }
 
   deleteCard() {
-    if (confirm('Are you sure you want to delete this item?'))
+    if (confirm('Estas seguro de eliminar esta tarjeta?'))
       this.delete.emit(this.id);
   }
 

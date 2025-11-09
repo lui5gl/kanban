@@ -2,14 +2,19 @@
   class="flex min-h-screen flex-col gap-4 bg-gradient-to-br from-slate-500 to-slate-600 p-4"
 >
   <div class="flex items-center gap-1 select-none">
-    <img ngSrc="image\kanban.png" alt="Kanban icon" width="64" height="64" />
+    <img
+      ngSrc="image\kanban.png"
+      alt="Icono del tablero Kanban"
+      width="64"
+      height="64"
+    />
     <h1 class="rounded-xs text-3xl font-bold text-slate-50">
-      Kanban | Improve your workflow
+      Kanban | Mejora tu flujo de trabajo
     </h1>
   </div>
   <section class="grid gap-4 md:grid-cols-3">
-    <app-column column_name="Todo" />
-    <app-column column_name="In progress" />
-    <app-column column_name="Done" />
+    <app-column column_name="Por hacer" />
+    <app-column column_name="En progreso" />
+    <app-column column_name="Hecho" />
   </section>
 </main>

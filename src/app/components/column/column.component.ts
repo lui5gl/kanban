@@ -10,8 +10,8 @@ import { CardComponent } from '../card/card.component';
   imports: [CardComponent, NgOptimizedImage, DragDropModule],
 })
 export class ColumnComponent implements AfterContentChecked {
-  private readonly boardColumns = ['Todo', 'In progress', 'Done'];
-  @Input() column_name = 'Undefined column name';
+  private readonly boardColumns = ['Por hacer', 'En progreso', 'Hecho'];
+  @Input() column_name = 'Columna sin nombre';
   cards: {
     id: number;
     title: string;
@@ -42,8 +42,8 @@ export class ColumnComponent implements AfterContentChecked {
 
     this.cards.push({
       id: newId,
-      title: 'New Title',
-      description: 'New Description',
+      title: 'Nuevo titulo',
+      description: 'Nueva descripcion',
       column_name: this.column_name,
       is_editable: false,
       priority: 'low',
@@ -67,7 +67,7 @@ export class ColumnComponent implements AfterContentChecked {
     const index = this.cards.findIndex((i) => i.id === item.id);
 
     if (index === -1)
-      return console.error('The card you are trying to update does not exist.');
+      return console.error('La tarjeta que intentas actualizar no existe.');
 
     this.cards[index] = { ...item };
     this.saveCards();
