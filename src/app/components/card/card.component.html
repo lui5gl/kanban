@@ -97,16 +97,21 @@
         <input
           type="date"
           [attr.id]="getElementId('dueDate')"
-          [value]="dueDate"
+          [value]="dueDate || ''"
           (change)="saveCard()"
           [disabled]="is_archived"
           class="rounded-sm border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700"
         />
       </div>
     </div>
-    <div class="flex flex-col gap-0.5 border-t border-slate-200 pt-3 text-right text-xs text-slate-500">
-      <span>Creada: {{ createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
-      <span>Actualizada: {{ updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+    <div class="flex flex-wrap justify-between gap-4 border-t border-slate-200 pt-3 text-xs text-slate-500">
+      <span class="font-medium text-left text-slate-600">
+        {{ dueDate ? daysUntilDue : 'Sin fecha de entrega' }}
+      </span>
+      <div class="flex flex-col gap-0.5 text-right">
+        <span>Creada: {{ createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+        <span>Actualizada: {{ updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
     </div>
   </div>
 </section>

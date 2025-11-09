@@ -25,7 +25,7 @@ export class CardComponent {
   @Input() is_archived: boolean = false;
   @Input() createdAt: string = new Date().toISOString();
   @Input() updatedAt: string = new Date().toISOString();
-  @Input() dueDate: string = new Date().toISOString().split('T')[0];
+  @Input() dueDate: string | null = null;
   isActionMenuOpen = false;
 
   @Output() save = new EventEmitter<{
@@ -37,7 +37,7 @@ export class CardComponent {
     is_archived: boolean;
     createdAt: string;
     updatedAt: string;
-    dueDate: string;
+    dueDate: string | null;
   }>();
   @Output() delete = new EventEmitter<number>();
 
@@ -83,13 +83,13 @@ export class CardComponent {
     const newTitle = titleElement?.innerText ?? this.title;
     const newDescription = descriptionElement?.innerText ?? this.description;
     const newPriority = priorityElement?.value ?? this.priority;
-    const newDueDate = dueDateElement?.value || this.dueDate;
+    const newDueDate = dueDateElement?.value || null;
 
     const hasContentChange =
       newTitle !== this.title ||
       newDescription !== this.description ||
       newPriority !== this.priority ||
-      newDueDate !== this.dueDate;
+      (newDueDate ?? '') !== (this.dueDate ?? '');
 
     if (!forceUpdate && !hasContentChange) return;
 
@@ -138,6 +138,19 @@ export class CardComponent {
 
   private get columnIdPrefix(): string {
     return this.column_name.toLowerCase().replace(/\s+/g, '-');
+  }
+
+  get daysUntilDue(): string {
+    if (!this.dueDate) return 'Sin fecha';
+    const now = new Date();
+    const due = new Date(this.dueDate);
+    const diffTime = due.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 1) return `${diffDays} días restantes`;
+    if (diffDays === 1) return '1 día restante';
+    if (diffDays === 0) return 'Entrega hoy';
+    return `Atrasado por ${Math.abs(diffDays)} días`;
   }
 
   private async openConfirmDialog(data: {
