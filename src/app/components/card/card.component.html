@@ -1,15 +1,32 @@
 <section
   cdkDrag
-  class="flex cursor-grab flex-col gap-1 rounded-sm bg-slate-50 p-4 text-slate-700"
+  [cdkDragDisabled]="is_archived"
+  class="flex flex-col gap-1 rounded-sm bg-slate-50 p-4 text-slate-700"
+  [class.opacity-60]="is_archived"
+  [class.cursor-not-allowed]="is_archived"
+  [class.cursor-grab]="!is_archived"
 >
   <div cdkDragHandle class="flex justify-between select-none">
     <button
       (click)="toggleLockState()"
       class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
+      [disabled]="is_archived"
     >
       <img
         ngSrc="/icons/{{ is_editable ? 'unlock' : 'lock' }}.svg"
         alt="Icono de candado"
+        width="16"
+        height="16"
+      />
+    </button>
+    <button
+      (click)="toggleArchiveState()"
+      class="flex aspect-square w-7 items-center justify-center rounded-sm bg-slate-200 transition-all duration-150 hover:bg-slate-300"
+      [attr.title]="is_archived ? 'Desarchivar' : 'Archivar'"
+    >
+      <img
+        ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
+        alt="{{ is_archived ? 'Icono de desarchivar' : 'Icono de archivar' }}"
         width="16"
         height="16"
       />
@@ -25,7 +42,7 @@
   <h3
     [attr.id]="getElementId('title')"
     (blur)="saveCard()"
-    [attr.contenteditable]="!is_editable"
+    [attr.contenteditable]="is_archived ? 'false' : is_editable ? 'true' : 'false'"
     class="cursor-text border-b-2 border-slate-200 text-xl font-semibold break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
   >
     {{ title }}
@@ -33,7 +50,7 @@
   <p
     [attr.id]="getElementId('description')"
     (blur)="saveCard()"
-    [attr.contenteditable]="!is_editable"
+    [attr.contenteditable]="is_archived ? 'false' : is_editable ? 'true' : 'false'"
     class="cursor-text break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
   >
     {{ description }}
@@ -45,7 +62,7 @@
       [attr.id]="getElementId('priority')"
       (change)="saveCard()"
       [value]="priority"
-      [disabled]="is_editable"
+      [disabled]="!is_editable || is_archived"
       class="rounded-xs bg-transparent"
     >
       <option value="low">Baja</option>

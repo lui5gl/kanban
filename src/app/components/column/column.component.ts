@@ -1,7 +1,22 @@
 import { NgOptimizedImage } from '@angular/common';
-import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { AfterContentChecked, Component, Input } from '@angular/core';
 import { CardComponent } from '../card/card.component';
+
+type ColumnCard = {
+  id: number;
+  title: string;
+  description: string;
+  priority: string;
+  column_name: string;
+  is_editable: boolean;
+  is_archived: boolean;
+};
 
 @Component({
   selector: 'app-column',
@@ -12,14 +27,7 @@ import { CardComponent } from '../card/card.component';
 export class ColumnComponent implements AfterContentChecked {
   private readonly boardColumns = ['Por hacer', 'En progreso', 'Hecho'];
   @Input() column_name = 'Columna sin nombre';
-  cards: {
-    id: number;
-    title: string;
-    description: string;
-    priority: string;
-    column_name: string;
-    is_editable: boolean;
-  }[] = [];
+  cards: ColumnCard[] = [];
 
   ngAfterContentChecked(): void {
     this.loadCards();
@@ -27,7 +35,13 @@ export class ColumnComponent implements AfterContentChecked {
 
   loadCards(): void {
     const columnStoredCards = localStorage.getItem(this.column_name);
-    this.cards = columnStoredCards ? JSON.parse(columnStoredCards) : [];
+    this.cards = columnStoredCards
+      ? (JSON.parse(columnStoredCards) as ColumnCard[]).map((card) => ({
+          ...card,
+          is_archived: card.is_archived ?? false,
+        }))
+      : [];
+    this.moveArchivedToBottom(this.cards);
   }
 
   saveCards(): void {
@@ -47,6 +61,7 @@ export class ColumnComponent implements AfterContentChecked {
       column_name: this.column_name,
       is_editable: false,
       priority: 'low',
+      is_archived: false,
     });
     this.saveCards();
   }
@@ -56,33 +71,18 @@ export class ColumnComponent implements AfterContentChecked {
     this.saveCards();
   }
 
-  updateCard(item: {
-    id: number;
-    title: string;
-    description: string;
-    is_editable: boolean;
-    column_name: string;
-    priority: string;
-  }): void {
+  updateCard(item: ColumnCard): void {
     const index = this.cards.findIndex((i) => i.id === item.id);
 
     if (index === -1)
       return console.error('La tarjeta que intentas actualizar no existe.');
 
     this.cards[index] = { ...item };
+    this.moveArchivedToBottom(this.cards);
     this.saveCards();
   }
 
-  drop(event: CdkDragDrop<
-    {
-      id: number;
-      title: string;
-      description: string;
-      priority: string;
-      column_name: string;
-      is_editable: boolean;
-    }[]
-  >): void {
+  drop(event: CdkDragDrop<ColumnCard[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
       this.saveCards();
@@ -98,12 +98,14 @@ export class ColumnComponent implements AfterContentChecked {
 
     const movedCard = event.container.data[event.currentIndex];
     movedCard.column_name = this.column_name;
+    this.moveArchivedToBottom(event.container.data);
 
     const previousColumnName = this.getColumnNameFromDropListId(
       event.previousContainer.id,
     );
 
     if (previousColumnName) {
+      this.moveArchivedToBottom(event.previousContainer.data);
       this.persistColumn(previousColumnName, event.previousContainer.data);
     }
 
@@ -120,17 +122,7 @@ export class ColumnComponent implements AfterContentChecked {
       .map((column) => this.toDropListId(column));
   }
 
-  private persistColumn(
-    columnName: string,
-    cards: {
-      id: number;
-      title: string;
-      description: string;
-      priority: string;
-      column_name: string;
-      is_editable: boolean;
-    }[],
-  ): void {
+  private persistColumn(columnName: string, cards: ColumnCard[]): void {
     localStorage.setItem(columnName, JSON.stringify(cards));
   }
 
@@ -142,5 +134,18 @@ export class ColumnComponent implements AfterContentChecked {
     return this.boardColumns.find(
       (column) => this.toDropListId(column) === id,
     );
+  }
+
+  private moveArchivedToBottom(cards: ColumnCard[]): void {
+    if (!cards.length) return;
+
+    const active: ColumnCard[] = [];
+    const archived: ColumnCard[] = [];
+
+    cards.forEach((card) =>
+      card.is_archived ? archived.push(card) : active.push(card),
+    );
+
+    cards.splice(0, cards.length, ...active, ...archived);
   }
 }

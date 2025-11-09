@@ -14,6 +14,7 @@ export class CardComponent implements OnInit {
   @Input() priority: string = 'low';
   @Input() column_name: string = 'Columna sin nombre';
   @Input() is_editable: boolean = false;
+  @Input() is_archived: boolean = false;
 
   @Output() save = new EventEmitter<{
     id: number;
@@ -22,6 +23,7 @@ export class CardComponent implements OnInit {
     is_editable: boolean;
     column_name: string;
     priority: string;
+    is_archived: boolean;
   }>();
   @Output() delete = new EventEmitter<number>();
 
@@ -35,12 +37,15 @@ export class CardComponent implements OnInit {
       this.getElementId('description'),
     );
 
-    const contentEditable = this.is_editable ? 'true' : 'false';
+    const contentEditable =
+      this.is_archived || !this.is_editable ? 'false' : 'true';
     titleElement?.setAttribute('contenteditable', contentEditable);
     descriptionElement?.setAttribute('contenteditable', contentEditable);
   }
 
   toggleLockState() {
+    if (this.is_archived) return;
+
     this.is_editable = !this.is_editable;
     this.saveCard();
     this.loadLockState();
@@ -64,12 +69,22 @@ export class CardComponent implements OnInit {
 
     this.save.emit({
       id: this.id,
-      title: titleElement.innerText,
-      description: descriptionElement.innerText,
+      title: titleElement?.innerText ?? this.title,
+      description: descriptionElement?.innerText ?? this.description,
       is_editable: this.is_editable,
       column_name: this.column_name,
-      priority: priorityElement.value,
+      priority: priorityElement?.value ?? this.priority,
+      is_archived: this.is_archived,
     });
+  }
+
+  toggleArchiveState() {
+    this.is_archived = !this.is_archived;
+    if (this.is_archived && this.is_editable) {
+      this.is_editable = false;
+    }
+    this.loadLockState();
+    this.saveCard();
   }
 
   getElementId(field: 'title' | 'description' | 'priority'): string {
