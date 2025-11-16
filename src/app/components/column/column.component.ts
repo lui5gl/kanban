@@ -5,21 +5,14 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { AfterContentChecked, Component, Input } from '@angular/core';
+import { AfterContentChecked, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { SortDirection, SortOption } from '../../types/sort-option';
 import { CardComponent } from '../card/card.component';
+import { BoardService } from '../../services/board.service';
+import { Card } from '../../models/card.model';
 
-type ColumnCard = {
-  id: number;
-  title: string;
-  description: string;
-  priority: string;
-  column_name: string;
-  is_archived: boolean;
-  createdAt: string;
-  updatedAt: string;
-  dueDate: string | null;
-};
+type ColumnCard = Card;
 
 @Component({
   selector: 'app-column',
@@ -27,10 +20,12 @@ type ColumnCard = {
   styles: [],
   imports: [CardComponent, NgOptimizedImage, DragDropModule],
 })
-export class ColumnComponent implements AfterContentChecked {
+export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
   private readonly boardColumns = ['Por hacer', 'En progreso', 'Hecho'];
   private _sortOption: SortOption = 'createdAt';
   private _sortDirection: SortDirection = 'asc';
+  private filtersSubscription?: Subscription;
+
   @Input() column_name = 'Columna sin nombre';
   @Input()
   set sortOption(value: SortOption) {
@@ -50,42 +45,49 @@ export class ColumnComponent implements AfterContentChecked {
   get sortDirection(): SortDirection {
     return this._sortDirection;
   }
+
+  allCards: ColumnCard[] = [];
   cards: ColumnCard[] = [];
+
+  constructor(private boardService: BoardService) {}
+
+  ngOnInit(): void {
+    // Suscribirse a cambios en los filtros
+    this.filtersSubscription = this.boardService.filters$.subscribe(() => {
+      this.applyFilters();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.filtersSubscription?.unsubscribe();
+  }
 
   ngAfterContentChecked(): void {
     this.loadCards();
   }
 
   loadCards(): void {
-    const columnStoredCards = localStorage.getItem(this.column_name);
-    this.cards = columnStoredCards
-      ? (JSON.parse(columnStoredCards) as ColumnCard[]).map((card) => {
-          const fallback =
-            card.createdAt ?? card.updatedAt ?? new Date().toISOString();
-          return {
-            ...card,
-            is_archived: card.is_archived ?? false,
-            createdAt: card.createdAt ?? fallback,
-            updatedAt: card.updatedAt ?? fallback,
-            dueDate: card.dueDate ?? null,
-          };
-        })
-      : [];
+    this.allCards = this.boardService.getCards(this.column_name);
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    this.cards = this.boardService.filterCards(this.allCards);
     this.arrangeCards(this.cards);
   }
 
   saveCards(): void {
-    localStorage.setItem(this.column_name, JSON.stringify(this.cards));
+    this.boardService.saveCards(this.column_name, this.allCards);
     this.loadCards();
   }
 
   addCard(): void {
-    const newId = this.cards.length
-      ? Math.max(...this.cards.map((item) => item.id)) + 1
+    const newId = this.allCards.length
+      ? Math.max(...this.allCards.map((item) => item.id)) + 1
       : 1;
     const timestamp = new Date().toISOString();
 
-    this.cards.push({
+    this.allCards.push({
       id: newId,
       title: 'Nuevo titulo',
       description: 'Nueva descripcion',
@@ -96,23 +98,21 @@ export class ColumnComponent implements AfterContentChecked {
       updatedAt: timestamp,
       dueDate: null,
     });
-    this.arrangeCards();
     this.saveCards();
   }
 
   removeCard(id: number): void {
-    this.cards = this.cards.filter((item) => item.id !== id);
+    this.allCards = this.allCards.filter((item) => item.id !== id);
     this.saveCards();
   }
 
   updateCard(item: ColumnCard): void {
-    const index = this.cards.findIndex((i) => i.id === item.id);
+    const index = this.allCards.findIndex((i) => i.id === item.id);
 
     if (index === -1)
       return console.error('La tarjeta que intentas actualizar no existe.');
 
-    this.cards[index] = { ...item };
-    this.arrangeCards();
+    this.allCards[index] = { ...item };
     this.saveCards();
   }
 
@@ -159,7 +159,7 @@ export class ColumnComponent implements AfterContentChecked {
   }
 
   private persistColumn(columnName: string, cards: ColumnCard[]): void {
-    localStorage.setItem(columnName, JSON.stringify(cards));
+    this.boardService.saveCards(columnName, cards);
   }
 
   private toDropListId(columnName: string): string {

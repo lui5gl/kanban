@@ -1,0 +1,120 @@
+<div class="rounded-md bg-slate-50/20 p-4 shadow-sm text-slate-50">
+  <div class="flex items-center justify-between mb-3">
+    <h3 class="text-lg font-semibold flex items-center gap-2">
+      <img
+        ngSrc="/icons/chart-histogram.svg"
+        alt="Estadísticas"
+        width="20"
+        height="20"
+      />
+      Estadísticas
+    </h3>
+    <button
+      type="button"
+      (click)="toggleExpanded()"
+      class="rounded-sm px-2 py-1 transition hover:bg-slate-50/10"
+    >
+      {{ isExpanded ? '▼' : '▶' }}
+    </button>
+  </div>
+
+  <!-- Vista compacta -->
+  <div *ngIf="!isExpanded" class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+    <div class="flex flex-col items-center p-2 rounded-sm bg-slate-50/10">
+      <span class="text-2xl font-bold">{{ activeCards }}</span>
+      <span class="text-xs">Activas</span>
+    </div>
+    <div class="flex flex-col items-center p-2 rounded-sm bg-slate-50/10">
+      <span class="text-2xl font-bold">{{ stats.completedCards }}</span>
+      <span class="text-xs">Completadas</span>
+    </div>
+    <div class="flex flex-col items-center p-2 rounded-sm bg-slate-50/10">
+      <span class="text-2xl font-bold">{{ stats.overdueCards }}</span>
+      <span class="text-xs">Atrasadas</span>
+    </div>
+    <div class="flex flex-col items-center p-2 rounded-sm bg-slate-50/10">
+      <span class="text-2xl font-bold">{{ completionPercentage }}%</span>
+      <span class="text-xs">Progreso</span>
+    </div>
+  </div>
+
+  <!-- Vista expandida -->
+  <div *ngIf="isExpanded" class="flex flex-col gap-4">
+    <!-- Resumen general -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div class="flex flex-col p-3 rounded-sm bg-slate-50/10">
+        <span class="text-sm text-slate-200">Total de tarjetas</span>
+        <span class="text-2xl font-bold">{{ stats.totalCards }}</span>
+      </div>
+      <div class="flex flex-col p-3 rounded-sm bg-slate-50/10">
+        <span class="text-sm text-slate-200">Tarjetas activas</span>
+        <span class="text-2xl font-bold">{{ activeCards }}</span>
+      </div>
+      <div class="flex flex-col p-3 rounded-sm bg-slate-50/10">
+        <span class="text-sm text-slate-200">Archivadas</span>
+        <span class="text-2xl font-bold">{{ stats.archivedCards }}</span>
+      </div>
+    </div>
+
+    <!-- Por columna -->
+    <div class="flex flex-col gap-2">
+      <h4 class="text-sm font-semibold text-slate-200">Por columna:</h4>
+      <div class="grid grid-cols-3 gap-2">
+        @for (column of stats.cardsByColumn | keyvalue; track column.key) {
+          <div class="flex flex-col items-center p-2 rounded-sm bg-slate-50/10 text-sm">
+            <span class="font-bold text-lg">{{ column.value }}</span>
+            <span class="text-xs text-center">{{ column.key }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Por prioridad -->
+    <div class="flex flex-col gap-2">
+      <h4 class="text-sm font-semibold text-slate-200">Por prioridad:</h4>
+      <div class="grid grid-cols-3 gap-2">
+        <div class="flex flex-col items-center p-2 rounded-sm bg-green-500/30 text-sm">
+          <span class="font-bold text-lg">{{ stats.cardsByPriority['low'] }}</span>
+          <span class="text-xs">Baja</span>
+        </div>
+        <div class="flex flex-col items-center p-2 rounded-sm bg-yellow-500/30 text-sm">
+          <span class="font-bold text-lg">{{ stats.cardsByPriority['medium'] }}</span>
+          <span class="text-xs">Media</span>
+        </div>
+        <div class="flex flex-col items-center p-2 rounded-sm bg-red-500/30 text-sm">
+          <span class="font-bold text-lg">{{ stats.cardsByPriority['high'] }}</span>
+          <span class="text-xs">Alta</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado -->
+    <div class="flex flex-col gap-2">
+      <h4 class="text-sm font-semibold text-slate-200">Estado:</h4>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="flex flex-col items-center p-2 rounded-sm bg-red-500/20 text-sm">
+          <span class="font-bold text-lg">{{ stats.overdueCards }}</span>
+          <span class="text-xs">Atrasadas</span>
+        </div>
+        <div class="flex flex-col items-center p-2 rounded-sm bg-green-500/20 text-sm">
+          <span class="font-bold text-lg">{{ completionPercentage }}%</span>
+          <span class="text-xs">Progreso</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="flex flex-col gap-2">
+      <div class="flex justify-between text-xs text-slate-200">
+        <span>Progreso general</span>
+        <span>{{ stats.completedCards }} / {{ stats.totalCards }}</span>
+      </div>
+      <div class="h-3 rounded-full bg-slate-50/20 overflow-hidden">
+        <div
+          class="h-full bg-green-500 transition-all duration-500"
+          [style.width.%]="completionPercentage"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

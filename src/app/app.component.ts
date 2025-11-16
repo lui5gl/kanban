@@ -2,12 +2,22 @@ import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ColumnComponent } from './components/column/column.component';
+import { FiltersComponent } from './components/filters/filters.component';
+import { StatsComponent } from './components/stats/stats.component';
+import { DataManagerComponent } from './components/data-manager/data-manager.component';
 import { SortDirection, SortOption } from './types/sort-option';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  imports: [RouterModule, ColumnComponent, NgOptimizedImage],
+  imports: [
+    RouterModule,
+    ColumnComponent,
+    FiltersComponent,
+    StatsComponent,
+    DataManagerComponent,
+    NgOptimizedImage,
+  ],
 })
 export class AppComponent {
   sortOption: SortOption = 'createdAt';

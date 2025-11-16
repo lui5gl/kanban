@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { Card } from '../../models/card.model';
 
 @Component({
   selector: 'app-card',
@@ -20,7 +21,7 @@ export class CardComponent {
   @Input() id: number = 0;
   @Input() title: string = 'Titulo sin definir';
   @Input() description: string = 'Descripcion sin definir';
-  @Input() priority: string = 'low';
+  @Input() priority: 'low' | 'medium' | 'high' = 'low';
   @Input() column_name: string = 'Columna sin nombre';
   @Input() is_archived: boolean = false;
   @Input() createdAt: string = new Date().toISOString();
@@ -28,17 +29,7 @@ export class CardComponent {
   @Input() dueDate: string | null = null;
   isActionMenuOpen = false;
 
-  @Output() save = new EventEmitter<{
-    id: number;
-    title: string;
-    description: string;
-    column_name: string;
-    priority: string;
-    is_archived: boolean;
-    createdAt: string;
-    updatedAt: string;
-    dueDate: string | null;
-  }>();
+  @Output() save = new EventEmitter<Card>();
   @Output() delete = new EventEmitter<number>();
 
   constructor(private dialog: Dialog) {}
@@ -82,7 +73,7 @@ export class CardComponent {
 
     const newTitle = titleElement?.innerText ?? this.title;
     const newDescription = descriptionElement?.innerText ?? this.description;
-    const newPriority = priorityElement?.value ?? this.priority;
+    const newPriority = (priorityElement?.value ?? this.priority) as 'low' | 'medium' | 'high';
     const newDueDate = dueDateElement?.value || null;
 
     const hasContentChange =

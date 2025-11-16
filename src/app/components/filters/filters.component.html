@@ -1,0 +1,107 @@
+<div class="rounded-md bg-slate-50/20 p-4 shadow-sm text-slate-50">
+  <div class="flex items-center justify-between mb-3">
+    <h3 class="text-lg font-semibold flex items-center gap-2">
+      <img
+        ngSrc="/icons/filter.svg"
+        alt="Filtros"
+        width="20"
+        height="20"
+      />
+      Filtros y Búsqueda
+    </h3>
+    <button
+      type="button"
+      (click)="toggleExpanded()"
+      class="rounded-sm px-2 py-1 transition hover:bg-slate-50/10"
+    >
+      {{ isExpanded ? '▼' : '▶' }}
+    </button>
+  </div>
+
+  <div *ngIf="isExpanded" class="flex flex-col gap-4">
+    <!-- Búsqueda -->
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-medium">Buscar tarjetas:</label>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Título o descripción..."
+        class="rounded-sm border border-slate-200 bg-white/90 px-3 py-2 text-slate-700 placeholder:text-slate-400"
+      />
+    </div>
+
+    <!-- Prioridad -->
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-medium">Prioridad:</label>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-1.5 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="selectedPriorities.low"
+            (change)="onPriorityChange()"
+            class="cursor-pointer"
+          />
+          <span class="text-sm">Baja</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="selectedPriorities.medium"
+            (change)="onPriorityChange()"
+            class="cursor-pointer"
+          />
+          <span class="text-sm">Media</span>
+        </label>
+        <label class="flex items-center gap-1.5 cursor-pointer">
+          <input
+            type="checkbox"
+            [(ngModel)]="selectedPriorities.high"
+            (change)="onPriorityChange()"
+            class="cursor-pointer"
+          />
+          <span class="text-sm">Alta</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Fecha de vencimiento -->
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-medium">Fecha de entrega:</label>
+      <select
+        [(ngModel)]="dueDateFilter"
+        (change)="onDueDateFilterChange()"
+        class="rounded-sm border border-slate-200 bg-white/90 px-3 py-2 text-slate-700"
+      >
+        @for (option of dueDateOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Mostrar archivadas -->
+    <div class="flex items-center gap-2">
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          [(ngModel)]="showArchived"
+          (change)="onShowArchivedChange()"
+          class="cursor-pointer"
+        />
+        <span class="text-sm font-medium">Mostrar tarjetas archivadas</span>
+      </label>
+    </div>
+
+    <!-- Botón reset -->
+    <div class="flex justify-end gap-2 pt-2 border-t border-slate-50/20">
+      <button
+        type="button"
+        (click)="resetFilters()"
+        [disabled]="!hasActiveFilters"
+        class="rounded-sm bg-slate-50/90 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Limpiar filtros
+      </button>
+    </div>
+  </div>
+</div>

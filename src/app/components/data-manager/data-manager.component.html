@@ -1,0 +1,79 @@
+<div class="rounded-md bg-slate-50/20 p-4 shadow-sm text-slate-50">
+  <div class="flex items-center justify-between mb-3">
+    <h3 class="text-lg font-semibold flex items-center gap-2">
+      <img
+        ngSrc="/icons/database.svg"
+        alt="Gestión de datos"
+        width="20"
+        height="20"
+      />
+      Gestión de Datos
+    </h3>
+    <button
+      type="button"
+      (click)="toggleExpanded()"
+      class="rounded-sm px-2 py-1 transition hover:bg-slate-50/10"
+    >
+      {{ isExpanded ? '▼' : '▶' }}
+    </button>
+  </div>
+
+  <div *ngIf="isExpanded" class="flex flex-col gap-3">
+    <p class="text-sm text-slate-200">
+      Exporta tus datos para hacer una copia de seguridad o impórtalos desde un archivo.
+    </p>
+
+    <div class="flex flex-col gap-2">
+      <!-- Exportar -->
+      <button
+        type="button"
+        (click)="exportData()"
+        class="flex items-center justify-center gap-2 rounded-sm bg-slate-50/90 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+      >
+        <img
+          ngSrc="/icons/download.svg"
+          alt="Exportar"
+          width="18"
+          height="18"
+        />
+        Exportar datos (JSON)
+      </button>
+
+      <!-- Importar -->
+      <button
+        type="button"
+        (click)="importData()"
+        class="flex items-center justify-center gap-2 rounded-sm bg-blue-500/90 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-blue-500"
+      >
+        <img
+          ngSrc="/icons/upload.svg"
+          alt="Importar"
+          width="18"
+          height="18"
+        />
+        Importar datos desde archivo
+      </button>
+
+      <!-- Limpiar todo -->
+      <button
+        type="button"
+        (click)="clearAllData()"
+        class="flex items-center justify-center gap-2 rounded-sm bg-red-500/90 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-red-500"
+      >
+        <img
+          ngSrc="/icons/trash.svg"
+          alt="Eliminar"
+          width="18"
+          height="18"
+        />
+        Eliminar todos los datos
+      </button>
+    </div>
+
+    <div class="mt-2 p-3 rounded-sm bg-yellow-500/20 border border-yellow-500/40">
+      <p class="text-xs text-slate-100">
+        <strong>Nota:</strong> La importación reemplazará todos los datos actuales. Asegúrate de exportar una copia de seguridad antes de importar.
+      </p>
+    </div>
+  </div>
+</div>
