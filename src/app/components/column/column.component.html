@@ -4,7 +4,7 @@
   [cdkDropListData]="cards"
   [cdkDropListConnectedTo]="connectedDropLists"
   (cdkDropListDropped)="drop($event)"
-  class="grid gap-2 rounded-md bg-slate-50/20 p-4 shadow-sm space-y-2"
+  class="grid gap-2 space-y-2 rounded-md bg-slate-50/20 p-4 shadow-sm"
 >
   <h2 class="text-2xl font-semibold text-slate-50 select-none">
     {{ column_name }}
@@ -17,10 +17,10 @@
       [column_name]="column_name"
       [description]="card.description"
       [priority]="card.priority"
-        [is_archived]="card.is_archived"
-        [createdAt]="card.createdAt"
-        [updatedAt]="card.updatedAt"
-        [dueDate]="card.dueDate"
+      [is_archived]="card.is_archived"
+      [createdAt]="card.createdAt"
+      [updatedAt]="card.updatedAt"
+      [dueDate]="card.dueDate"
       (save)="updateCard($event)"
       (delete)="removeCard(card.id)"
     />
