@@ -90,27 +90,28 @@
     >
       <div class="flex flex-1 flex-col gap-1">
         <label class="font-semibold">Prioridad:</label>
-        <select
-          [attr.id]="getElementId('priority')"
-          (change)="saveCard()"
-          [value]="priority"
+        <p-select
+          [options]="priorityOptions"
+          [(ngModel)]="priority"
+          optionLabel="label"
+          optionValue="value"
           [disabled]="is_archived"
-          class="rounded-xs border border-slate-200 bg-white px-2 py-1"
-        >
-          <option value="low">Baja</option>
-          <option value="medium">Media</option>
-          <option value="high">Alta</option>
-        </select>
+          (onChange)="saveCard()"
+          styleClass="w-full"
+          class="text-sm"
+        />
       </div>
       <div class="flex flex-1 flex-col gap-1">
         <label class="font-semibold">Entrega aproximada:</label>
-        <input
-          type="date"
-          [attr.id]="getElementId('dueDate')"
-          [value]="dueDate || ''"
-          (change)="saveCard()"
+        <p-datepicker
+          [(ngModel)]="dueDateObj"
           [disabled]="is_archived"
-          class="rounded-sm border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700"
+          (onChange)="saveCard()"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+          iconDisplay="input"
+          styleClass="w-full"
+          class="text-sm"
         />
       </div>
     </div>

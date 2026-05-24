@@ -1,32 +1,53 @@
-import { DatePipe, NgOptimizedImage } from '@angular/common';
-import { Dialog } from '@angular/cdk/dialog';
-import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { DatePipe, NgOptimizedImage } from "@angular/common";
+import { Dialog } from "@angular/cdk/dialog";
+import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 import {
   Component,
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   Output,
-} from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { Card } from '../../models/card.model';
+  SimpleChanges,
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { Select } from "primeng/select";
+import { DatePicker } from "primeng/datepicker";
+import { firstValueFrom } from "rxjs";
+import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
+import { Card } from "../../models/card.model";
 
 @Component({
-  selector: 'app-card',
-  templateUrl: './card.component.html',
-  imports: [NgOptimizedImage, CdkDrag, CdkDragHandle, DatePipe],
+  selector: "app-card",
+  templateUrl: "./card.component.html",
+  imports: [
+    NgOptimizedImage,
+    CdkDrag,
+    CdkDragHandle,
+    DatePipe,
+    FormsModule,
+    Select,
+    DatePicker,
+  ],
 })
-export class CardComponent {
+export class CardComponent implements OnChanges {
   @Input() id: number = 0;
-  @Input() title: string = 'Titulo sin definir';
-  @Input() description: string = 'Descripcion sin definir';
-  @Input() priority: 'low' | 'medium' | 'high' = 'low';
-  @Input() column_name: string = 'Columna sin nombre';
+  @Input() title: string = "Titulo sin definir";
+  @Input() description: string = "Descripcion sin definir";
+  @Input() priority: "low" | "medium" | "high" = "low";
+  @Input() column_name: string = "Columna sin nombre";
   @Input() is_archived: boolean = false;
   @Input() createdAt: string = new Date().toISOString();
   @Input() updatedAt: string = new Date().toISOString();
   @Input() dueDate: string | null = null;
+  dueDateObj: Date | null = null;
+
+  readonly priorityOptions = [
+    { label: "Baja", value: "low" },
+    { label: "Media", value: "medium" },
+    { label: "Alta", value: "high" },
+  ];
+
   isActionMenuOpen = false;
 
   @Output() save = new EventEmitter<Card>();
@@ -34,7 +55,14 @@ export class CardComponent {
 
   constructor(private dialog: Dialog) {}
 
-  @HostListener('document:click')
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["dueDate"]) {
+      const val = changes["dueDate"].currentValue;
+      this.dueDateObj = val ? this.parseISODate(val) : null;
+    }
+  }
+
+  @HostListener("document:click")
   closeMenu() {
     this.isActionMenuOpen = false;
   }
@@ -47,9 +75,9 @@ export class CardComponent {
   async deleteCard(event?: MouseEvent) {
     event?.stopPropagation();
     const confirmed = await this.openConfirmDialog({
-      title: 'Eliminar tarjeta',
-      description: 'Esta acción no se puede deshacer.',
-      confirmLabel: 'Eliminar',
+      title: "Eliminar tarjeta",
+      description: "Esta acción no se puede deshacer.",
+      confirmLabel: "Eliminar",
     });
 
     this.isActionMenuOpen = false;
@@ -58,41 +86,28 @@ export class CardComponent {
   }
 
   saveCard(forceUpdate = false) {
-    let titleElement = document.getElementById(
-      this.getElementId('title'),
+    const titleElement = document.getElementById(
+      this.getElementId("title"),
     ) as HTMLElement;
-    let descriptionElement = document.getElementById(
-      this.getElementId('description'),
+    const descriptionElement = document.getElementById(
+      this.getElementId("description"),
     ) as HTMLElement;
-    let priorityElement = document.getElementById(
-      this.getElementId('priority'),
-    ) as HTMLSelectElement;
-    let dueDateElement = document.getElementById(
-      this.getElementId('dueDate'),
-    ) as HTMLInputElement;
 
     const newTitle = titleElement?.innerText ?? this.title;
     const newDescription = descriptionElement?.innerText ?? this.description;
-    const newPriority = (priorityElement?.value ?? this.priority) as
-      | 'low'
-      | 'medium'
-      | 'high';
-    const newDueDate = dueDateElement?.value || null;
 
-    const hasContentChange =
-      newTitle !== this.title ||
-      newDescription !== this.description ||
-      newPriority !== this.priority ||
-      (newDueDate ?? '') !== (this.dueDate ?? '');
+    // Sync date from picker back to string
+    this.syncDueDateFromPicker();
 
-    if (!forceUpdate && !hasContentChange) return;
+    const titleChanged = newTitle !== this.title;
+    const descChanged = newDescription !== this.description;
+
+    if (!forceUpdate && !titleChanged && !descChanged) return;
 
     this.title = newTitle;
     this.description = newDescription;
-    this.priority = newPriority;
-    this.dueDate = newDueDate;
 
-    if (hasContentChange || forceUpdate) {
+    if (titleChanged || descChanged || forceUpdate) {
       this.updatedAt = new Date().toISOString();
     }
 
@@ -112,11 +127,11 @@ export class CardComponent {
   async toggleArchiveState(event?: MouseEvent) {
     event?.stopPropagation();
     const confirmed = await this.openConfirmDialog({
-      title: this.is_archived ? 'Desarchivar tarjeta' : 'Archivar tarjeta',
+      title: this.is_archived ? "Desarchivar tarjeta" : "Archivar tarjeta",
       description: this.is_archived
-        ? 'La tarjeta volverá a estar visible y editable.'
-        : 'La tarjeta se ocultará en la sección de archivadas.',
-      confirmLabel: this.is_archived ? 'Desarchivar' : 'Archivar',
+        ? "La tarjeta volverá a estar visible y editable."
+        : "La tarjeta se ocultará en la sección de archivadas.",
+      confirmLabel: this.is_archived ? "Desarchivar" : "Archivar",
     });
 
     if (!confirmed) return;
@@ -126,26 +141,40 @@ export class CardComponent {
     this.saveCard(true);
   }
 
-  getElementId(
-    field: 'title' | 'description' | 'priority' | 'dueDate',
-  ): string {
+  private parseISODate(dateStr: string): Date {
+    const [y, m, d] = dateStr.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  private syncDueDateFromPicker(): void {
+    if (this.dueDateObj) {
+      const y = this.dueDateObj.getFullYear();
+      const m = String(this.dueDateObj.getMonth() + 1).padStart(2, "0");
+      const d = String(this.dueDateObj.getDate()).padStart(2, "0");
+      this.dueDate = `${y}-${m}-${d}`;
+    } else {
+      this.dueDate = null;
+    }
+  }
+
+  getElementId(field: "title" | "description"): string {
     return `${this.columnIdPrefix}-${field}-${this.id}`;
   }
 
   private get columnIdPrefix(): string {
-    return this.column_name.toLowerCase().replace(/\s+/g, '-');
+    return this.column_name.toLowerCase().replace(/\s+/g, "-");
   }
 
   get daysUntilDue(): string {
-    if (!this.dueDate) return 'Sin fecha';
+    if (!this.dueDate) return "Sin fecha";
     const now = new Date();
     const due = new Date(this.dueDate);
     const diffTime = due.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays > 1) return `${diffDays} días restantes`;
-    if (diffDays === 1) return '1 día restante';
-    if (diffDays === 0) return 'Entrega hoy';
+    if (diffDays === 1) return "1 día restante";
+    if (diffDays === 0) return "Entrega hoy";
     return `Atrasado por ${Math.abs(diffDays)} días`;
   }
 
@@ -158,8 +187,8 @@ export class CardComponent {
     const dialogRef = this.dialog.open<boolean>(ConfirmDialogComponent, {
       data,
       disableClose: true,
-      panelClass: 'app-dialog-panel',
-      backdropClass: 'app-dialog-backdrop',
+      panelClass: "app-dialog-panel",
+      backdropClass: "app-dialog-backdrop",
     });
 
     return !!(await firstValueFrom(dialogRef.closed));
