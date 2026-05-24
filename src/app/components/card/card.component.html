@@ -8,26 +8,14 @@
   <div
     class="relative flex items-center justify-center rounded-t-md bg-slate-300 px-4 py-1 text-slate-50"
   >
-    <img
-      cdkDragHandle
-      ngSrc="/icons/grip-horizontal.svg"
-      alt="Mover tarjeta"
-      width="22"
-      height="22"
-      class="cursor-grab"
-    />
+    <i cdkDragHandle class="ti ti-grip-horizontal cursor-grab text-[22px]"></i>
     <div class="absolute top-1/2 right-2 -translate-y-1/2">
       <button
         (click)="toggleMenu($event)"
         class="flex aspect-square items-center justify-center rounded-md p-1 text-slate-50 transition-all duration-150 hover:bg-slate-200/40"
         type="button"
       >
-        <img
-          ngSrc="/icons/menu-2.svg"
-          alt="Abrir menú de acciones"
-          width="16"
-          height="16"
-        />
+        <i class="ti ti-menu-2 text-base"></i>
       </button>
       @if (isActionMenuOpen) {
         <div
@@ -39,12 +27,9 @@
             class="flex items-center gap-2 px-4 py-2 text-left transition hover:bg-slate-100"
             (click)="toggleArchiveState($event)"
           >
-            <img
-              ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
-              alt="{{ is_archived ? 'Desarchivar' : 'Archivar' }}"
-              width="16"
-              height="16"
-            />
+            <i
+              class="ti ti-archive{{ is_archived ? '-off' : '' }} text-base"
+            ></i>
             {{ is_archived ? "Desarchivar" : "Archivar" }}
           </button>
           <button
@@ -52,12 +37,7 @@
             class="flex items-center gap-2 px-4 py-2 text-left transition hover:bg-slate-100"
             (click)="deleteCard($event)"
           >
-            <img
-              ngSrc="/icons/delete.svg"
-              alt="Eliminar"
-              width="16"
-              height="16"
-            />
+            <i class="ti ti-trash text-base"></i>
             Eliminar
           </button>
         </div>
@@ -122,8 +102,11 @@
         {{ dueDate ? daysUntilDue : "Sin fecha de entrega" }}
       </span>
       <div class="flex flex-col gap-0.5 text-right">
-        <span>Creada: {{ createdAt | date: "dd/MM/yyyy HH:mm" }}</span>
-        <span>Actualizada: {{ updatedAt | date: "dd/MM/yyyy HH:mm" }}</span>
+        @if (dateToggle.showCreated$ | async) {
+          <span>Creada: {{ createdAt | date: "dd/MM/yyyy HH:mm" }}</span>
+        } @else {
+          <span>Actualizada: {{ updatedAt | date: "dd/MM/yyyy HH:mm" }}</span>
+        }
       </div>
     </div>
   </div>

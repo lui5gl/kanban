@@ -1,4 +1,4 @@
-import { DatePipe, NgOptimizedImage } from "@angular/common";
+import { AsyncPipe, DatePipe } from "@angular/common";
 import { Dialog } from "@angular/cdk/dialog";
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 import {
@@ -15,15 +15,16 @@ import { Select } from "primeng/select";
 import { DatePicker } from "primeng/datepicker";
 import { firstValueFrom } from "rxjs";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
+import { DateToggleService } from "../../services/date-toggle.service";
 import { Card } from "../../models/card.model";
 
 @Component({
   selector: "app-card",
   templateUrl: "./card.component.html",
   imports: [
-    NgOptimizedImage,
     CdkDrag,
     CdkDragHandle,
+    AsyncPipe,
     DatePipe,
     FormsModule,
     Select,
@@ -53,7 +54,10 @@ export class CardComponent implements OnChanges {
   @Output() save = new EventEmitter<Card>();
   @Output() delete = new EventEmitter<number>();
 
-  constructor(private dialog: Dialog) {}
+  constructor(
+    private dialog: Dialog,
+    readonly dateToggle: DateToggleService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["dueDate"]) {
