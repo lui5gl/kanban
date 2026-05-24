@@ -1,33 +1,21 @@
-import { NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { ColumnComponent } from './components/column/column.component';
-import { FiltersComponent } from './components/filters/filters.component';
-import { StatsComponent } from './components/stats/stats.component';
-import { DataManagerComponent } from './components/data-manager/data-manager.component';
-import { SortDirection, SortOption } from './types/sort-option';
+import { Component } from "@angular/core";
+import { ColumnComponent } from "./components/column/column.component";
+import { SortDirection, SortOption } from "./types/sort-option";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  imports: [
-    RouterModule,
-    ColumnComponent,
-    FiltersComponent,
-    StatsComponent,
-    DataManagerComponent,
-    NgOptimizedImage,
-  ],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  imports: [ColumnComponent],
 })
 export class AppComponent {
-  sortOption: SortOption = 'createdAt';
-  sortDirection: SortDirection = 'asc';
+  sortOption: SortOption = "createdAt";
+  sortDirection: SortDirection = "asc";
 
   readonly sortOptions: { value: SortOption; label: string }[] = [
-    { value: 'title', label: 'Título' },
-    { value: 'createdAt', label: 'Fecha de creación' },
-    { value: 'updatedAt', label: 'Última actualización' },
-    { value: 'priority', label: 'Prioridad' },
+    { value: "title", label: "Título" },
+    { value: "createdAt", label: "Fecha de creación" },
+    { value: "updatedAt", label: "Última actualización" },
+    { value: "priority", label: "Prioridad" },
   ];
 
   onSortChange(event: Event) {
@@ -35,6 +23,6 @@ export class AppComponent {
   }
 
   toggleDirection() {
-    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
   }
 }
