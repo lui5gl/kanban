@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgOptimizedImage, NgIf } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import { Dialog } from '@angular/cdk/dialog';
 import { firstValueFrom } from 'rxjs';
 import { BoardService } from '../../services/board.service';
@@ -9,14 +9,14 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
   selector: 'app-data-manager',
   standalone: true,
   templateUrl: './data-manager.component.html',
-  imports: [NgOptimizedImage, NgIf],
+  imports: [NgOptimizedImage],
 })
 export class DataManagerComponent {
   isExpanded = false;
 
   constructor(
     private boardService: BoardService,
-    private dialog: Dialog
+    private dialog: Dialog,
   ) {}
 
   toggleExpanded(): void {
@@ -40,7 +40,8 @@ export class DataManagerComponent {
 
       const confirmed = await this.openConfirmDialog({
         title: 'Importar datos',
-        description: 'Esto reemplazará todos los datos actuales. ¿Deseas continuar?',
+        description:
+          'Esto reemplazará todos los datos actuales. ¿Deseas continuar?',
         confirmLabel: 'Importar',
       });
 
@@ -49,7 +50,9 @@ export class DataManagerComponent {
       const success = await this.boardService.importFromFile(file);
 
       if (success) {
-        alert('Datos importados correctamente. Recarga la página para ver los cambios.');
+        alert(
+          'Datos importados correctamente. Recarga la página para ver los cambios.',
+        );
         window.location.reload();
       } else {
         alert('Error al importar datos. Verifica que el archivo sea válido.');
@@ -62,7 +65,8 @@ export class DataManagerComponent {
   async clearAllData(): Promise<void> {
     const confirmed = await this.openConfirmDialog({
       title: 'Eliminar todos los datos',
-      description: 'Esta acción eliminará todas las tarjetas del tablero. Esta acción no se puede deshacer.',
+      description:
+        'Esta acción eliminará todas las tarjetas del tablero. Esta acción no se puede deshacer.',
       confirmLabel: 'Eliminar todo',
     });
 

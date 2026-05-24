@@ -16,10 +16,10 @@
       height="22"
       class="cursor-grab"
     />
-    <div class="absolute right-2 top-1/2 -translate-y-1/2">
+    <div class="absolute top-1/2 right-2 -translate-y-1/2">
       <button
         (click)="toggleMenu($event)"
-        class="flex aspect-square p-1 items-center justify-center rounded-md text-slate-50 transition-all duration-150 hover:bg-slate-200/40"
+        class="flex aspect-square items-center justify-center rounded-md p-1 text-slate-50 transition-all duration-150 hover:bg-slate-200/40"
         type="button"
       >
         <img
@@ -29,37 +29,45 @@
           height="16"
         />
       </button>
-      <div
-        *ngIf="isActionMenuOpen"
-        (click)="$event.stopPropagation()"
-        class="absolute right-0 top-6 z-20 flex w-44 flex-col rounded-md border border-slate-300 bg-white text-sm text-slate-700 shadow-2xl"
-      >
-        <button
-          type="button"
-          class="flex items-center gap-2 px-4 py-2 text-left transition hover:bg-slate-100"
-          (click)="toggleArchiveState($event)"
+      @if (isActionMenuOpen) {
+        <div
+          (click)="$event.stopPropagation()"
+          class="absolute top-6 right-0 z-20 flex w-44 flex-col rounded-md border border-slate-300 bg-white text-sm text-slate-700 shadow-2xl"
         >
-          <img
-            ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
-            alt="{{ is_archived ? 'Desarchivar' : 'Archivar' }}"
-            width="16"
-            height="16"
-          />
-          {{ is_archived ? 'Desarchivar' : 'Archivar' }}
-        </button>
-        <button
-          type="button"
-          class="flex items-center gap-2 px-4 py-2 text-left transition hover:bg-slate-100"
-          (click)="deleteCard($event)"
-        >
-          <img ngSrc="/icons/delete.svg" alt="Eliminar" width="16" height="16" />
-          Eliminar
-        </button>
-      </div>
+          <button
+            type="button"
+            class="flex items-center gap-2 px-4 py-2 text-left transition hover:bg-slate-100"
+            (click)="toggleArchiveState($event)"
+          >
+            <img
+              ngSrc="/icons/{{ is_archived ? 'archive-off' : 'archive' }}.svg"
+              alt="{{ is_archived ? 'Desarchivar' : 'Archivar' }}"
+              width="16"
+              height="16"
+            />
+            {{ is_archived ? "Desarchivar" : "Archivar" }}
+          </button>
+          <button
+            type="button"
+            class="flex items-center gap-2 px-4 py-2 text-left transition hover:bg-slate-100"
+            (click)="deleteCard($event)"
+          >
+            <img
+              ngSrc="/icons/delete.svg"
+              alt="Eliminar"
+              width="16"
+              height="16"
+            />
+            Eliminar
+          </button>
+        </div>
+      }
     </div>
   </div>
 
-  <div class="flex flex-col gap-2 border border-slate-200 border-t-0 rounded-b-md p-4">
+  <div
+    class="flex flex-col gap-2 rounded-b-md border border-t-0 border-slate-200 p-4"
+  >
     <h3
       [attr.id]="getElementId('title')"
       (blur)="saveCard()"
@@ -77,7 +85,9 @@
       {{ description }}
     </p>
 
-    <div class="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-700">
+    <div
+      class="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-700"
+    >
       <div class="flex flex-1 flex-col gap-1">
         <label class="font-semibold">Prioridad:</label>
         <select
@@ -104,13 +114,15 @@
         />
       </div>
     </div>
-    <div class="flex flex-wrap justify-between gap-4 border-t border-slate-200 pt-3 text-xs text-slate-500">
-      <span class="font-medium text-left text-slate-600">
-        {{ dueDate ? daysUntilDue : 'Sin fecha de entrega' }}
+    <div
+      class="flex flex-wrap justify-between gap-4 border-t border-slate-200 pt-3 text-xs text-slate-500"
+    >
+      <span class="text-left font-medium text-slate-600">
+        {{ dueDate ? daysUntilDue : "Sin fecha de entrega" }}
       </span>
       <div class="flex flex-col gap-0.5 text-right">
-        <span>Creada: {{ createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
-        <span>Actualizada: {{ updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+        <span>Creada: {{ createdAt | date: "dd/MM/yyyy HH:mm" }}</span>
+        <span>Actualizada: {{ updatedAt | date: "dd/MM/yyyy HH:mm" }}</span>
       </div>
     </div>
   </div>

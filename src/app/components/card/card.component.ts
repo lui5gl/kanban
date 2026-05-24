@@ -1,4 +1,4 @@
-import { DatePipe, NgIf, NgOptimizedImage } from '@angular/common';
+import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { Dialog } from '@angular/cdk/dialog';
 import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import {
@@ -15,7 +15,7 @@ import { Card } from '../../models/card.model';
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
-  imports: [NgOptimizedImage, CdkDrag, CdkDragHandle, DatePipe, NgIf],
+  imports: [NgOptimizedImage, CdkDrag, CdkDragHandle, DatePipe],
 })
 export class CardComponent {
   @Input() id: number = 0;
@@ -73,7 +73,10 @@ export class CardComponent {
 
     const newTitle = titleElement?.innerText ?? this.title;
     const newDescription = descriptionElement?.innerText ?? this.description;
-    const newPriority = (priorityElement?.value ?? this.priority) as 'low' | 'medium' | 'high';
+    const newPriority = (priorityElement?.value ?? this.priority) as
+      | 'low'
+      | 'medium'
+      | 'high';
     const newDueDate = dueDateElement?.value || null;
 
     const hasContentChange =
@@ -123,7 +126,9 @@ export class CardComponent {
     this.saveCard(true);
   }
 
-  getElementId(field: 'title' | 'description' | 'priority' | 'dueDate'): string {
+  getElementId(
+    field: 'title' | 'description' | 'priority' | 'dueDate',
+  ): string {
     return `${this.columnIdPrefix}-${field}-${this.id}`;
   }
 

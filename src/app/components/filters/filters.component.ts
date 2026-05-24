@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgOptimizedImage, NgIf } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import { BoardService } from '../../services/board.service';
 import { BoardFilters } from '../../models/card.model';
 
@@ -8,7 +8,7 @@ import { BoardFilters } from '../../models/card.model';
   selector: 'app-filters',
   standalone: true,
   templateUrl: './filters.component.html',
-  imports: [FormsModule, NgOptimizedImage, NgIf],
+  imports: [FormsModule, NgOptimizedImage],
 })
 export class FiltersComponent implements OnInit {
   searchTerm = '';
@@ -37,7 +37,7 @@ export class FiltersComponent implements OnInit {
     this.showArchived = filters.showArchived;
     this.dueDateFilter = filters.dueDateFilter;
 
-    filters.priorities.forEach(priority => {
+    filters.priorities.forEach((priority) => {
       this.selectedPriorities[priority] = true;
     });
   }

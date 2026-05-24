@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgOptimizedImage, NgIf, KeyValuePipe } from '@angular/common';
+import { NgOptimizedImage, KeyValuePipe } from '@angular/common';
 import { Subscription, interval } from 'rxjs';
 import { BoardService } from '../../services/board.service';
 import { BoardStats } from '../../models/card.model';
@@ -8,7 +8,7 @@ import { BoardStats } from '../../models/card.model';
   selector: 'app-stats',
   standalone: true,
   templateUrl: './stats.component.html',
-  imports: [NgOptimizedImage, NgIf, KeyValuePipe],
+  imports: [NgOptimizedImage, KeyValuePipe],
 })
 export class StatsComponent implements OnInit, OnDestroy {
   stats: BoardStats = {
@@ -47,7 +47,9 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   get completionPercentage(): number {
     if (this.stats.totalCards === 0) return 0;
-    return Math.round((this.stats.completedCards / this.stats.totalCards) * 100);
+    return Math.round(
+      (this.stats.completedCards / this.stats.totalCards) * 100,
+    );
   }
 
   get activeCards(): number {
