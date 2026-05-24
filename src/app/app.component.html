@@ -1,12 +1,10 @@
-<main
-  class="flex min-h-screen flex-col gap-4 bg-gradient-to-br from-slate-500 to-slate-600 p-4"
->
+<main class="flex min-h-screen flex-col gap-4 bg-zinc-100 p-4">
   <div
     class="flex flex-col gap-4 select-none md:flex-row md:items-center md:justify-between"
   >
     <div class="flex items-center gap-1">
-      <i class="ti ti-layout-kanban text-5xl text-slate-50"></i>
-      <h1 class="rounded-xs text-3xl font-bold text-slate-50">
+      <i class="ti ti-layout-kanban text-5xl text-zinc-700"></i>
+      <h1 class="rounded-xs text-3xl font-bold text-zinc-700">
         Kanban | Improve your workflow
       </h1>
     </div>
@@ -15,17 +13,17 @@
   <!-- Columnas del tablero -->
   <section class="grid gap-4 md:grid-cols-3">
     <app-column
-      column_name="Por hacer"
+      column_name="To do"
       [sortOption]="sortOption"
       [sortDirection]="sortDirection"
     />
     <app-column
-      column_name="En progreso"
+      column_name="In progress"
       [sortOption]="sortOption"
       [sortDirection]="sortDirection"
     />
     <app-column
-      column_name="Hecho"
+      column_name="Done"
       [sortOption]="sortOption"
       [sortDirection]="sortDirection"
     />
