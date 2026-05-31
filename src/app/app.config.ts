@@ -1,12 +1,8 @@
-import {
-  ApplicationConfig,
-  importProvidersFrom,
-  provideZoneChangeDetection,
-} from "@angular/core";
+import { ApplicationConfig, provideZoneChangeDetection } from "@angular/core";
 import { provideRouter } from "@angular/router";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { providePrimeNG } from "primeng/config";
-import { DialogModule } from "@angular/cdk/dialog";
+import { ConfirmationService } from "primeng/api";
 import { ZincPreset } from "./presets/zinc";
 
 import { routes } from "./app.routes";
@@ -21,6 +17,6 @@ export const appConfig: ApplicationConfig = {
         preset: ZincPreset,
       },
     }),
-    importProvidersFrom(DialogModule),
+    ConfirmationService,
   ],
 };

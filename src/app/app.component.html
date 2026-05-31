@@ -1,31 +1,258 @@
-<main class="flex min-h-screen flex-col gap-4 bg-zinc-100 p-4">
-  <div
-    class="flex flex-col gap-4 select-none md:flex-row md:items-center md:justify-between"
-  >
-    <div class="flex items-center gap-1">
-      <i class="ti ti-layout-kanban text-5xl text-zinc-700"></i>
-      <h1 class="rounded-xs text-3xl font-bold text-zinc-700">
-        Kanban | Improve your workflow
-      </h1>
-    </div>
-  </div>
+<p-confirmdialog />
 
-  <!-- Columnas del tablero -->
-  <section class="grid gap-4 md:grid-cols-3">
-    <app-column
-      column_name="To do"
-      [sortOption]="sortOption"
-      [sortDirection]="sortDirection"
-    />
-    <app-column
-      column_name="In progress"
-      [sortOption]="sortOption"
-      [sortDirection]="sortDirection"
-    />
-    <app-column
-      column_name="Done"
-      [sortOption]="sortOption"
-      [sortDirection]="sortDirection"
-    />
-  </section>
-</main>
+<div class="flex h-screen flex-col bg-zinc-100">
+  <!-- Main toolbar -->
+  <header class="z-40 border-b border-zinc-200 bg-white">
+    <div
+      class="mx-auto flex max-w-7xl items-center justify-between px-6 py-2.5"
+    >
+      <!-- Left: Brand -->
+      <div class="flex items-center gap-2.5">
+        <div
+          class="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900"
+        >
+          <i class="ti ti-layout-kanban text-sm text-white"></i>
+        </div>
+        <span class="text-sm font-bold tracking-tight text-zinc-900"
+          >Kanban</span
+        >
+      </div>
+
+      <!-- Center: Search -->
+      <div class="relative mx-4 w-full max-w-sm">
+        <i
+          class="ti ti-search absolute top-1/2 left-3 -translate-y-1/2 text-sm text-zinc-400"
+        ></i>
+        <input
+          type="text"
+          pInputText
+          placeholder="Buscar..."
+          [ngModel]="searchTerm"
+          (ngModelChange)="onSearchChange($event)"
+          class="w-full rounded-md border-zinc-200 bg-zinc-50 pl-8 text-sm placeholder:text-zinc-400 focus:border-zinc-300 focus:bg-white"
+        />
+      </div>
+
+      <!-- Right: Actions -->
+      <div class="flex items-center gap-1">
+        <p-button
+          [icon]="showFilters ? 'ti ti-x' : 'ti ti-filter'"
+          (onClick)="showFilters = !showFilters"
+          [text]="true"
+          severity="secondary"
+          size="small"
+          [class]="showFilters ? 'text-zinc-900' : ''"
+          title="Filtros"
+        />
+        <p-button
+          [icon]="showSortBar ? 'ti ti-x' : 'ti ti-arrows-sort'"
+          (onClick)="showSortBar = !showSortBar"
+          [text]="true"
+          severity="secondary"
+          size="small"
+          [class]="showSortBar ? 'text-zinc-900' : ''"
+          title="Ordenar"
+        />
+        <div class="mx-1 h-4 w-px bg-zinc-200"></div>
+        <p-button
+          icon="ti ti-upload"
+          (onClick)="importData()"
+          [text]="true"
+          severity="secondary"
+          size="small"
+          title="Importar"
+        />
+        <p-button
+          icon="ti ti-download"
+          (onClick)="exportData()"
+          [text]="true"
+          severity="secondary"
+          size="small"
+          title="Exportar"
+        />
+      </div>
+    </div>
+
+    <!-- Filters bar (toggle) -->
+    @if (showFilters) {
+      <div class="border-t border-zinc-100 bg-zinc-50">
+        <div class="mx-auto flex max-w-7xl items-center gap-3 px-6 py-2">
+          <!-- Priority pills -->
+          <div class="flex items-center gap-1">
+            <span class="mr-1 text-[11px] font-medium text-zinc-400 uppercase"
+              >Prioridad</span
+            >
+            @for (p of priorityOptions; track p.value) {
+              <button
+                type="button"
+                (click)="togglePriority(p.value)"
+                class="rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors"
+                [class.bg-emerald-100]="
+                  p.value === 'low' && filterPriorities.includes(p.value)
+                "
+                [class.text-emerald-700]="
+                  p.value === 'low' && filterPriorities.includes(p.value)
+                "
+                [class.hover:bg-emerald-50]="
+                  p.value === 'low' && !filterPriorities.includes(p.value)
+                "
+                [class.bg-amber-100]="
+                  p.value === 'medium' && filterPriorities.includes(p.value)
+                "
+                [class.text-amber-700]="
+                  p.value === 'medium' && filterPriorities.includes(p.value)
+                "
+                [class.hover:bg-amber-50]="
+                  p.value === 'medium' && !filterPriorities.includes(p.value)
+                "
+                [class.bg-red-100]="
+                  p.value === 'high' && filterPriorities.includes(p.value)
+                "
+                [class.text-red-700]="
+                  p.value === 'high' && filterPriorities.includes(p.value)
+                "
+                [class.hover:bg-red-50]="
+                  p.value === 'high' && !filterPriorities.includes(p.value)
+                "
+                [class.bg-zinc-100]="!filterPriorities.includes(p.value)"
+                [class.text-zinc-500]="!filterPriorities.includes(p.value)"
+              >
+                {{ p.label }}
+              </button>
+            }
+          </div>
+
+          <div class="h-4 w-px bg-zinc-200"></div>
+
+          <!-- Date filter -->
+          <p-select
+            [options]="dueDateOptions"
+            [(ngModel)]="dueDateFilter"
+            optionLabel="label"
+            optionValue="value"
+            (ngModelChange)="applyFilters()"
+            placeholder="Fecha"
+            styleClass="w-28"
+          />
+
+          <!-- Archived toggle -->
+          <button
+            type="button"
+            (click)="showArchived = !showArchived; applyFilters()"
+            class="rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors"
+            [class.bg-zinc-800]="showArchived"
+            [class.text-white]="showArchived"
+            [class.bg-zinc-100]="!showArchived"
+            [class.text-zinc-500]="!showArchived"
+            [class.hover:bg-zinc-200]="!showArchived"
+          >
+            Archivadas
+          </button>
+
+          <!-- Clear -->
+          @if (hasActiveFilters) {
+            <button
+              type="button"
+              (click)="resetFilters()"
+              class="ml-auto text-xs font-medium text-red-500 hover:text-red-600"
+            >
+              Limpiar filtros
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Sort bar (toggle) -->
+    @if (showSortBar) {
+      <div class="border-t border-zinc-100 bg-zinc-50">
+        <div class="mx-auto flex max-w-7xl items-center gap-3 px-6 py-2">
+          <span class="text-[11px] font-medium text-zinc-400 uppercase"
+            >Ordenar por</span
+          >
+          <p-select
+            [options]="sortOptions"
+            [(ngModel)]="sortOption"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-32"
+          />
+          <button
+            type="button"
+            (click)="toggleDirection()"
+            class="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200"
+          >
+            <i
+              class="ti text-sm"
+              [class.ti-arrow-up]="sortDirection === 'asc'"
+              [class.ti-arrow-down]="sortDirection === 'desc'"
+            ></i>
+            {{ sortDirection === "asc" ? "Ascendente" : "Descendente" }}
+          </button>
+        </div>
+      </div>
+    }
+  </header>
+
+  <!-- Board -->
+  <main class="flex-1 overflow-auto px-6 py-6">
+    <div class="mx-auto grid max-w-7xl grid-cols-3 gap-6">
+      <app-column
+        column_name="Por hacer"
+        [sortOption]="sortOption"
+        [sortDirection]="sortDirection"
+      />
+      <app-column
+        column_name="En progreso"
+        [sortOption]="sortOption"
+        [sortDirection]="sortDirection"
+      />
+      <app-column
+        column_name="Hecho"
+        [sortOption]="sortOption"
+        [sortDirection]="sortDirection"
+      />
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-zinc-200 bg-white">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
+      <div class="flex items-center gap-5 text-xs text-zinc-500">
+        <span class="font-semibold text-zinc-700"
+          >{{ stats.totalCards }} tarjetas</span
+        >
+        <span class="flex items-center gap-1.5">
+          <span class="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+          Por hacer: {{ stats.cardsByColumn["Por hacer"] ?? 0 }}
+        </span>
+        <span class="flex items-center gap-1.5">
+          <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+          En progreso: {{ stats.cardsByColumn["En progreso"] ?? 0 }}
+        </span>
+        <span class="flex items-center gap-1.5">
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+          Hecho: {{ stats.cardsByColumn["Hecho"] ?? 0 }}
+        </span>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        @if (stats.overdueCards > 0) {
+          <span class="flex items-center gap-1.5 font-medium text-red-500">
+            <i class="ti ti-alert-triangle text-sm"></i>
+            {{ stats.overdueCards }} atrasadas
+          </span>
+        }
+        @if (stats.archivedCards > 0) {
+          <span class="flex items-center gap-1.5 text-zinc-400">
+            <i class="ti ti-archive text-sm"></i>
+            {{ stats.archivedCards }} archivadas
+          </span>
+        }
+        <span class="flex items-center gap-1.5 text-zinc-400">
+          <i class="ti ti-check text-sm"></i>
+          {{ stats.completedCards }} completadas
+        </span>
+      </div>
+    </div>
+  </footer>
+</div>

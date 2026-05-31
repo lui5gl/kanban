@@ -1,32 +1,37 @@
-import { NgOptimizedImage } from '@angular/common';
 import {
   CdkDragDrop,
   DragDropModule,
   moveItemInArray,
   transferArrayItem,
-} from '@angular/cdk/drag-drop';
-import { AfterContentChecked, Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { SortDirection, SortOption } from '../../types/sort-option';
-import { CardComponent } from '../card/card.component';
-import { BoardService } from '../../services/board.service';
-import { Card } from '../../models/card.model';
+} from "@angular/cdk/drag-drop";
+import {
+  AfterContentChecked,
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+} from "@angular/core";
+import { Subscription } from "rxjs";
+import { ButtonModule } from "primeng/button";
+import { SortDirection, SortOption } from "../../types/sort-option";
+import { CardComponent } from "../card/card.component";
+import { BoardService } from "../../services/board.service";
+import { Card as CardModel } from "../../models/card.model";
 
-type ColumnCard = Card;
+type ColumnCard = CardModel;
 
 @Component({
-  selector: 'app-column',
-  templateUrl: './column.component.html',
-  styles: [],
-  imports: [CardComponent, NgOptimizedImage, DragDropModule],
+  selector: "app-column",
+  templateUrl: "./column.component.html",
+  imports: [CardComponent, DragDropModule, ButtonModule],
 })
 export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
-  private readonly boardColumns = ['Por hacer', 'En progreso', 'Hecho'];
-  private _sortOption: SortOption = 'createdAt';
-  private _sortDirection: SortDirection = 'asc';
+  private readonly boardColumns = ["Por hacer", "En progreso", "Hecho"];
+  private _sortOption: SortOption = "createdAt";
+  private _sortDirection: SortDirection = "asc";
   private filtersSubscription?: Subscription;
 
-  @Input() column_name = 'Columna sin nombre';
+  @Input() column_name = "Columna sin nombre";
   @Input()
   set sortOption(value: SortOption) {
     if (this._sortOption === value) return;
@@ -52,7 +57,6 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
   constructor(private boardService: BoardService) {}
 
   ngOnInit(): void {
-    // Suscribirse a cambios en los filtros
     this.filtersSubscription = this.boardService.filters$.subscribe(() => {
       this.applyFilters();
     });
@@ -89,10 +93,10 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
 
     this.allCards.push({
       id: newId,
-      title: 'Nuevo titulo',
-      description: 'Nueva descripcion',
+      title: "Nuevo titulo",
+      description: "Nueva descripcion",
       column_name: this.column_name,
-      priority: 'low',
+      priority: "low",
       is_archived: false,
       createdAt: timestamp,
       updatedAt: timestamp,
@@ -108,10 +112,7 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
 
   updateCard(item: ColumnCard): void {
     const index = this.allCards.findIndex((i) => i.id === item.id);
-
-    if (index === -1)
-      return console.error('La tarjeta que intentas actualizar no existe.');
-
+    if (index === -1) return;
     this.allCards[index] = { ...item };
     this.saveCards();
   }
@@ -163,51 +164,45 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
   }
 
   private toDropListId(columnName: string): string {
-    return `drop-list-${columnName.toLowerCase().replace(/\s+/g, '-')}`;
+    return `drop-list-${columnName.toLowerCase().replace(/\s+/g, "-")}`;
   }
 
   private getColumnNameFromDropListId(id: string): string | undefined {
-    return this.boardColumns.find(
-      (column) => this.toDropListId(column) === id,
-    );
+    return this.boardColumns.find((column) => this.toDropListId(column) === id);
   }
 
   private arrangeCards(cards: ColumnCard[] = this.cards): void {
     if (!cards.length) return;
-
     const comparator = this.getComparator();
     const active: ColumnCard[] = [];
     const archived: ColumnCard[] = [];
-
     cards.forEach((card) =>
       card.is_archived ? archived.push(card) : active.push(card),
     );
-
     active.sort(comparator);
     archived.sort(comparator);
-
     cards.splice(0, cards.length, ...active, ...archived);
   }
 
   private getComparator(): (a: ColumnCard, b: ColumnCard) => number {
-    const directionFactor = this._sortDirection === 'asc' ? 1 : -1;
+    const directionFactor = this._sortDirection === "asc" ? 1 : -1;
     return (a, b) => {
       let comparison = 0;
       switch (this._sortOption) {
-        case 'title':
-          comparison = a.title.localeCompare(b.title, 'es', {
-            sensitivity: 'base',
+        case "title":
+          comparison = a.title.localeCompare(b.title, "es", {
+            sensitivity: "base",
           });
           break;
-        case 'priority':
+        case "priority":
           comparison =
             this.priorityWeight(a.priority) - this.priorityWeight(b.priority);
           break;
-        case 'updatedAt':
+        case "updatedAt":
           comparison =
             new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
           break;
-        case 'createdAt':
+        case "createdAt":
         default:
           comparison =
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();

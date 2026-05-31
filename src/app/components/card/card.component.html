@@ -1,75 +1,95 @@
 <section
   cdkDrag
   [cdkDragDisabled]="is_archived"
-  class="relative flex flex-col rounded-md bg-slate-50 text-slate-700 shadow-sm"
-  [class.opacity-60]="is_archived"
+  class="group relative cursor-default rounded-lg border border-zinc-200 bg-white transition-all duration-150 hover:border-zinc-300 hover:shadow-md"
+  [class.opacity-40]="is_archived"
   [class.cursor-not-allowed]="is_archived"
 >
+  <!-- Left priority stripe -->
   <div
-    class="relative flex items-center justify-center rounded-t-md bg-slate-300 px-4 py-1 text-slate-50"
-  >
-    <i cdkDragHandle class="ti ti-grip-horizontal cursor-grab text-[22px]"></i>
-    <div class="absolute top-1/2 right-2 -translate-y-1/2">
-      <button
-        (click)="toggleMenu($event)"
-        class="flex aspect-square items-center justify-center rounded-md p-1 text-slate-50 transition-all duration-150 hover:bg-slate-200/40"
-        type="button"
-      >
-        <i class="ti ti-menu-2 text-base"></i>
-      </button>
-      @if (isActionMenuOpen) {
-        <div
-          (click)="$event.stopPropagation()"
-          class="absolute top-6 right-0 z-20 flex w-44 flex-col rounded-md border border-slate-300 bg-white text-sm text-slate-700 shadow-2xl"
-        >
-          <button
-            type="button"
-            class="flex items-center gap-2 px-4 py-2 text-left transition hover:bg-slate-100"
-            (click)="toggleArchiveState($event)"
-          >
-            <i
-              class="ti ti-archive{{ is_archived ? '-off' : '' }} text-base"
-            ></i>
-            {{ is_archived ? "Desarchivar" : "Archivar" }}
-          </button>
-          <button
-            type="button"
-            class="flex items-center gap-2 px-4 py-2 text-left transition hover:bg-slate-100"
-            (click)="deleteCard($event)"
-          >
-            <i class="ti ti-trash text-base"></i>
-            Eliminar
-          </button>
-        </div>
-      }
-    </div>
-  </div>
+    class="absolute top-0 bottom-0 left-0 w-[3px] rounded-l-lg"
+    [class.bg-emerald-400]="priority === 'low'"
+    [class.bg-amber-400]="priority === 'medium'"
+    [class.bg-red-400]="priority === 'high'"
+  ></div>
 
-  <div
-    class="flex flex-col gap-2 rounded-b-md border border-t-0 border-slate-200 p-4"
-  >
-    <h3
-      [attr.id]="getElementId('title')"
-      (blur)="saveCard()"
-      [attr.contenteditable]="is_archived ? 'false' : 'true'"
-      class="cursor-text border-b-2 border-slate-200 text-xl font-semibold break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
-    >
-      {{ title }}
-    </h3>
+  <!-- Card body -->
+  <div class="flex flex-col gap-2.5 p-3.5 pl-5">
+    <!-- Row 1: Drag handle + Title + Actions -->
+    <div class="flex items-start gap-1.5">
+      <i
+        cdkDragHandle
+        class="ti ti-grip-vertical mt-0.5 shrink-0 cursor-grab text-sm text-zinc-300 opacity-0 transition-opacity group-hover:opacity-100"
+      ></i>
+
+      <h3
+        [attr.id]="getElementId('title')"
+        (blur)="saveCard()"
+        [attr.contenteditable]="is_archived ? 'false' : 'true'"
+        class="min-w-0 flex-1 cursor-text text-sm leading-snug font-semibold wrap-break-word text-zinc-900 outline-none selection:bg-zinc-500 selection:text-white"
+      >
+        {{ title }}
+      </h3>
+
+      <!-- Action menu -->
+      <div class="relative">
+        <p-button
+          icon="ti ti-dots"
+          (onClick)="toggleMenu($event)"
+          [text]="true"
+          severity="secondary"
+          size="small"
+          styleClass="!h-6 !w-6 !p-0 opacity-0 group-hover:opacity-100"
+        />
+        @if (isActionMenuOpen) {
+          <div
+            (click)="$event.stopPropagation()"
+            class="absolute top-7 right-0 z-50 w-40 overflow-hidden rounded-lg border border-zinc-200 bg-white py-1 shadow-lg"
+          >
+            <button
+              type="button"
+              class="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+              (click)="toggleArchiveState($event)"
+            >
+              <i
+                class="ti ti-archive{{ is_archived ? '-off' : '' }} text-base"
+              ></i>
+              {{ is_archived ? "Desarchivar" : "Archivar" }}
+            </button>
+            <button
+              type="button"
+              class="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50"
+              (click)="deleteCard($event)"
+            >
+              <i class="ti ti-trash text-base"></i>
+              Eliminar
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Row 2: Description -->
     <p
       [attr.id]="getElementId('description')"
       (blur)="saveCard()"
       [attr.contenteditable]="is_archived ? 'false' : 'true'"
-      class="cursor-text break-all text-neutral-800 selection:bg-sky-600 selection:text-neutral-100 focus:outline-hidden"
+      class="cursor-text text-[13px] leading-relaxed wrap-break-word outline-none selection:bg-zinc-500 selection:text-white"
+      [class.text-zinc-500]="description"
+      [class.text-zinc-400]="!description"
+      [attr.data-placeholder]="!description ? 'Añadir descripción…' : null"
     >
       {{ description }}
     </p>
 
-    <div
-      class="flex flex-wrap items-center justify-between gap-4 text-sm text-slate-700"
-    >
-      <div class="flex flex-1 flex-col gap-1">
-        <label class="font-semibold">Prioridad:</label>
+    <!-- Row 3: Priority & Date -->
+    <div class="grid grid-cols-2 gap-2.5 pt-0.5">
+      <div class="flex flex-col gap-1">
+        <label
+          class="text-[10px] font-semibold tracking-wider text-zinc-400 uppercase"
+        >
+          Prioridad
+        </label>
         <p-select
           [options]="priorityOptions"
           [(ngModel)]="priority"
@@ -78,11 +98,14 @@
           [disabled]="is_archived"
           (onChange)="saveCard()"
           styleClass="w-full"
-          class="text-sm"
         />
       </div>
-      <div class="flex flex-1 flex-col gap-1">
-        <label class="font-semibold">Entrega aproximada:</label>
+      <div class="flex flex-col gap-1">
+        <label
+          class="text-[10px] font-semibold tracking-wider text-zinc-400 uppercase"
+        >
+          Entrega
+        </label>
         <p-datepicker
           [(ngModel)]="dueDateObj"
           [disabled]="is_archived"
@@ -91,23 +114,33 @@
           [showIcon]="true"
           iconDisplay="input"
           styleClass="w-full"
-          class="text-sm"
         />
       </div>
     </div>
+
+    <!-- Row 4: Footer -->
     <div
-      class="flex flex-wrap justify-between gap-4 border-t border-slate-200 pt-3 text-xs text-slate-500"
+      class="flex items-center justify-between border-t border-zinc-100 pt-2 text-[11px]"
     >
-      <span class="text-left font-medium text-slate-600">
-        {{ dueDate ? daysUntilDue : "Sin fecha de entrega" }}
-      </span>
-      <div class="flex flex-col gap-0.5 text-right">
-        @if (dateToggle.showCreated$ | async) {
-          <span>Creada: {{ createdAt | date: "dd/MM/yyyy HH:mm" }}</span>
-        } @else {
-          <span>Actualizada: {{ updatedAt | date: "dd/MM/yyyy HH:mm" }}</span>
+      <span
+        class="font-medium"
+        [class.text-zinc-400]="!isOverdue && !dueDate"
+        [class.text-zinc-500]="!isOverdue && dueDate"
+        [class.text-red-500]="isOverdue"
+      >
+        @if (isOverdue) {
+          <i class="ti ti-alert-triangle-filled mr-1 text-xs"></i>
         }
-      </div>
+        {{ dueDate ? daysUntilDue : "Sin fecha" }}
+      </span>
+
+      <span class="text-zinc-400">
+        @if (dateToggle.showCreated$ | async) {
+          {{ createdAt | date: "dd/MM HH:mm" }}
+        } @else {
+          {{ updatedAt | date: "dd/MM HH:mm" }}
+        }
+      </span>
     </div>
   </div>
 </section>

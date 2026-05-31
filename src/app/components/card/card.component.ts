@@ -1,5 +1,4 @@
 import { AsyncPipe, DatePipe } from "@angular/common";
-import { Dialog } from "@angular/cdk/dialog";
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 import {
   Component,
@@ -9,14 +8,15 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  inject,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Select } from "primeng/select";
 import { DatePicker } from "primeng/datepicker";
-import { firstValueFrom } from "rxjs";
-import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
+import { ButtonModule } from "primeng/button";
+import { ConfirmationService } from "primeng/api";
 import { DateToggleService } from "../../services/date-toggle.service";
-import { Card } from "../../models/card.model";
+import { Card as CardModel } from "../../models/card.model";
 
 @Component({
   selector: "app-card",
@@ -29,6 +29,7 @@ import { Card } from "../../models/card.model";
     FormsModule,
     Select,
     DatePicker,
+    ButtonModule,
   ],
 })
 export class CardComponent implements OnChanges {
@@ -51,13 +52,11 @@ export class CardComponent implements OnChanges {
 
   isActionMenuOpen = false;
 
-  @Output() save = new EventEmitter<Card>();
+  @Output() save = new EventEmitter<CardModel>();
   @Output() delete = new EventEmitter<number>();
 
-  constructor(
-    private dialog: Dialog,
-    readonly dateToggle: DateToggleService,
-  ) {}
+  private readonly confirmationService = inject(ConfirmationService);
+  readonly dateToggle = inject(DateToggleService);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["dueDate"]) {
@@ -67,29 +66,30 @@ export class CardComponent implements OnChanges {
   }
 
   @HostListener("document:click")
-  closeMenu() {
+  closeMenu(): void {
     this.isActionMenuOpen = false;
   }
 
-  toggleMenu(event: MouseEvent) {
+  toggleMenu(event: Event): void {
     event.stopPropagation();
     this.isActionMenuOpen = !this.isActionMenuOpen;
   }
 
-  async deleteCard(event?: MouseEvent) {
+  deleteCard(event?: MouseEvent): void {
     event?.stopPropagation();
-    const confirmed = await this.openConfirmDialog({
-      title: "Eliminar tarjeta",
-      description: "Esta acción no se puede deshacer.",
-      confirmLabel: "Eliminar",
-    });
-
     this.isActionMenuOpen = false;
 
-    if (confirmed) this.delete.emit(this.id);
+    this.confirmationService.confirm({
+      header: "Eliminar tarjeta",
+      message: "Esta acción no se puede deshacer.",
+      acceptLabel: "Eliminar",
+      rejectLabel: "Cancelar",
+      acceptButtonStyleClass: "p-button-danger",
+      accept: () => this.delete.emit(this.id),
+    });
   }
 
-  saveCard(forceUpdate = false) {
+  saveCard(forceUpdate = false): void {
     const titleElement = document.getElementById(
       this.getElementId("title"),
     ) as HTMLElement;
@@ -100,7 +100,6 @@ export class CardComponent implements OnChanges {
     const newTitle = titleElement?.innerText ?? this.title;
     const newDescription = descriptionElement?.innerText ?? this.description;
 
-    // Sync date from picker back to string
     this.syncDueDateFromPicker();
 
     const titleChanged = newTitle !== this.title;
@@ -128,21 +127,24 @@ export class CardComponent implements OnChanges {
     });
   }
 
-  async toggleArchiveState(event?: MouseEvent) {
+  toggleArchiveState(event?: MouseEvent): void {
     event?.stopPropagation();
-    const confirmed = await this.openConfirmDialog({
-      title: this.is_archived ? "Desarchivar tarjeta" : "Archivar tarjeta",
-      description: this.is_archived
-        ? "La tarjeta volverá a estar visible y editable."
-        : "La tarjeta se ocultará en la sección de archivadas.",
-      confirmLabel: this.is_archived ? "Desarchivar" : "Archivar",
-    });
-
-    if (!confirmed) return;
-
     this.isActionMenuOpen = false;
-    this.is_archived = !this.is_archived;
-    this.saveCard(true);
+
+    const isArchiving = !this.is_archived;
+
+    this.confirmationService.confirm({
+      header: isArchiving ? "Archivar tarjeta" : "Desarchivar tarjeta",
+      message: isArchiving
+        ? "La tarjeta se ocultará en la sección de archivadas."
+        : "La tarjeta volverá a estar visible y editable.",
+      acceptLabel: isArchiving ? "Archivar" : "Desarchivar",
+      rejectLabel: "Cancelar",
+      accept: () => {
+        this.is_archived = !this.is_archived;
+        this.saveCard(true);
+      },
+    });
   }
 
   private parseISODate(dateStr: string): Date {
@@ -169,6 +171,15 @@ export class CardComponent implements OnChanges {
     return this.column_name.toLowerCase().replace(/\s+/g, "-");
   }
 
+  get isOverdue(): boolean {
+    if (!this.dueDate) return false;
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const due = new Date(this.dueDate);
+    due.setHours(0, 0, 0, 0);
+    return due.getTime() < now.getTime();
+  }
+
   get daysUntilDue(): string {
     if (!this.dueDate) return "Sin fecha";
     const now = new Date();
@@ -180,21 +191,5 @@ export class CardComponent implements OnChanges {
     if (diffDays === 1) return "1 día restante";
     if (diffDays === 0) return "Entrega hoy";
     return `Atrasado por ${Math.abs(diffDays)} días`;
-  }
-
-  private async openConfirmDialog(data: {
-    title: string;
-    description: string;
-    confirmLabel?: string;
-    cancelLabel?: string;
-  }): Promise<boolean> {
-    const dialogRef = this.dialog.open<boolean>(ConfirmDialogComponent, {
-      data,
-      disableClose: true,
-      panelClass: "app-dialog-panel",
-      backdropClass: "app-dialog-backdrop",
-    });
-
-    return !!(await firstValueFrom(dialogRef.closed));
   }
 }
