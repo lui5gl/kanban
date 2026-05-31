@@ -1,34 +1,27 @@
-import { AsyncPipe, DatePipe } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 import {
   Component,
+  ElementRef,
   EventEmitter,
   HostListener,
   Input,
   OnChanges,
   Output,
   SimpleChanges,
+  ViewChild,
   inject,
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Select } from "primeng/select";
 import { DatePicker } from "primeng/datepicker";
 import { ConfirmationService } from "primeng/api";
-import { DateToggleService } from "../../services/date-toggle.service";
 import { Card as CardModel } from "../../models/card.model";
 
 @Component({
   selector: "app-card",
   templateUrl: "./card.component.html",
-  imports: [
-    CdkDrag,
-    CdkDragHandle,
-    AsyncPipe,
-    DatePipe,
-    FormsModule,
-    Select,
-    DatePicker,
-  ],
+  imports: [CdkDrag, CdkDragHandle, DatePipe, FormsModule, Select, DatePicker],
 })
 export class CardComponent implements OnChanges {
   @Input() id: number = 0;
@@ -54,7 +47,9 @@ export class CardComponent implements OnChanges {
   @Output() delete = new EventEmitter<number>();
 
   private readonly confirmationService = inject(ConfirmationService);
-  readonly dateToggle = inject(DateToggleService);
+
+  @ViewChild("titleRef") titleEl!: ElementRef<HTMLElement>;
+  @ViewChild("descRef") descEl!: ElementRef<HTMLElement>;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["dueDate"]) {
@@ -88,15 +83,9 @@ export class CardComponent implements OnChanges {
   }
 
   saveCard(forceUpdate = false): void {
-    const titleElement = document.getElementById(
-      this.getElementId("title"),
-    ) as HTMLElement;
-    const descriptionElement = document.getElementById(
-      this.getElementId("description"),
-    ) as HTMLElement;
-
-    const newTitle = titleElement?.innerText ?? this.title;
-    const newDescription = descriptionElement?.innerText ?? this.description;
+    const newTitle = this.titleEl?.nativeElement?.innerText ?? this.title;
+    const newDescription =
+      this.descEl?.nativeElement?.innerText ?? this.description;
 
     this.syncDueDateFromPicker();
 
@@ -159,14 +148,6 @@ export class CardComponent implements OnChanges {
     } else {
       this.dueDate = null;
     }
-  }
-
-  getElementId(field: "title" | "description"): string {
-    return `${this.columnIdPrefix}-${field}-${this.id}`;
-  }
-
-  private get columnIdPrefix(): string {
-    return this.column_name.toLowerCase().replace(/\s+/g, "-");
   }
 
   get isOverdue(): boolean {

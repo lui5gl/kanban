@@ -21,7 +21,8 @@
     ></i>
 
     <h3
-      [attr.id]="getElementId('title')"
+      #titleRef
+      [attr.id]="'card-title-' + id"
       (blur)="saveCard()"
       [attr.contenteditable]="is_archived ? 'false' : 'true'"
       class="min-w-0 flex-1 truncate text-[15px] leading-snug font-semibold text-zinc-900 outline-none selection:bg-zinc-500 selection:text-white dark:text-zinc-100 dark:selection:bg-zinc-400"
@@ -90,7 +91,8 @@
 
   <!-- Description -->
   <p
-    [attr.id]="getElementId('description')"
+    #descRef
+    [attr.id]="'card-desc-' + id"
     (blur)="saveCard()"
     [attr.contenteditable]="is_archived ? 'false' : 'true'"
     class="mt-2.5 cursor-text text-sm leading-relaxed text-zinc-500 outline-none selection:bg-zinc-500 selection:text-white dark:text-zinc-400 dark:selection:bg-zinc-400"
@@ -147,11 +149,7 @@
     </span>
 
     <span class="dark:text-zinc-500">
-      @if (dateToggle.showCreated$ | async) {
-        {{ createdAt | date: "dd/MM HH:mm" }}
-      } @else {
-        {{ updatedAt | date: "dd/MM HH:mm" }}
-      }
+      {{ updatedAt | date: "dd/MM HH:mm" }}
     </span>
   </div>
 </section>

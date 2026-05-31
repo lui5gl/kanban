@@ -1,0 +1,49 @@
+<footer
+  class="border-t border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+>
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
+    <div
+      class="flex items-center gap-5 text-xs text-zinc-500 dark:text-zinc-400"
+    >
+      <span class="font-semibold text-zinc-700 dark:text-zinc-200"
+        >{{ stats.totalCards }} tarjetas</span
+      >
+      <span class="flex items-center gap-1.5">
+        <span class="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+        Por hacer: {{ stats.cardsByColumn["Por hacer"] ?? 0 }}
+      </span>
+      <span class="flex items-center gap-1.5">
+        <span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+        En progreso: {{ stats.cardsByColumn["En progreso"] ?? 0 }}
+      </span>
+      <span class="flex items-center gap-1.5">
+        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+        Hecho: {{ stats.cardsByColumn["Hecho"] ?? 0 }}
+      </span>
+    </div>
+    <div class="flex items-center gap-4 text-xs">
+      @if (stats.overdueCards > 0) {
+        <span
+          class="flex items-center gap-1.5 font-medium text-red-500 dark:text-red-400"
+        >
+          <i class="ti ti-alert-triangle text-sm"></i>
+          {{ stats.overdueCards }} atrasadas
+        </span>
+      }
+      @if (stats.archivedCards > 0) {
+        <span
+          class="flex items-center gap-1.5 text-zinc-400 dark:text-zinc-500"
+        >
+          <i class="ti ti-archive text-sm"></i>
+          {{ stats.archivedCards }} archivadas
+        </span>
+      }
+      <span
+        class="flex items-center gap-1.5 text-zinc-400 dark:text-zinc-500"
+      >
+        <i class="ti ti-check text-sm"></i>
+        {{ stats.completedCards }} completadas
+      </span>
+    </div>
+  </div>
+</footer>

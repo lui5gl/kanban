@@ -2,7 +2,7 @@ export interface Card {
   id: number;
   title: string;
   description: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
   column_name: string;
   is_archived: boolean;
   createdAt: string;
@@ -12,9 +12,9 @@ export interface Card {
 
 export interface BoardFilters {
   searchTerm: string;
-  priorities: ('low' | 'medium' | 'high')[];
+  priorities: ("low" | "medium" | "high")[];
   showArchived: boolean;
-  dueDateFilter: 'all' | 'overdue' | 'today' | 'week' | 'none';
+  dueDateFilter: "all" | "overdue" | "today" | "week" | "none";
 }
 
 export interface BoardStats {
@@ -35,3 +35,6 @@ export interface BoardData {
   exportDate: string;
   version: string;
 }
+
+export const COLUMNS = ["Por hacer", "En progreso", "Hecho"] as const;
+export type ColumnName = (typeof COLUMNS)[number];

@@ -1,44 +1,56 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Card, BoardFilters, BoardStats, BoardData } from '../models/card.model';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
+import {
+  Card,
+  BoardFilters,
+  BoardStats,
+  BoardData,
+  COLUMNS,
+} from "../models/card.model";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class BoardService {
-  private readonly STORAGE_PREFIX = '';
-  private readonly BOARD_COLUMNS = ['Por hacer', 'En progreso', 'Hecho'];
+  private readonly STORAGE_PREFIX = "";
 
   private filtersSubject = new BehaviorSubject<BoardFilters>({
-    searchTerm: '',
+    searchTerm: "",
     priorities: [],
     showArchived: false,
-    dueDateFilter: 'all',
+    dueDateFilter: "all",
   });
 
-  public filters$: Observable<BoardFilters> = this.filtersSubject.asObservable();
+  public filters$: Observable<BoardFilters> =
+    this.filtersSubject.asObservable();
 
   constructor() {}
 
-  // Gestión de tarjetas
+  // --- Card persistence ---
+
   getCards(columnName: string): Card[] {
     const stored = localStorage.getItem(`${this.STORAGE_PREFIX}${columnName}`);
     if (!stored) return [];
 
-    const cards = JSON.parse(stored) as Card[];
-    return cards.map(card => this.normalizeCard(card));
+    return (JSON.parse(stored) as Card[]).map((card) =>
+      this.normalizeCard(card),
+    );
   }
 
   saveCards(columnName: string, cards: Card[]): void {
-    localStorage.setItem(`${this.STORAGE_PREFIX}${columnName}`, JSON.stringify(cards));
+    localStorage.setItem(
+      `${this.STORAGE_PREFIX}${columnName}`,
+      JSON.stringify(cards),
+    );
   }
 
   getAllCards(): Card[] {
-    return this.BOARD_COLUMNS.flatMap(column => this.getCards(column));
+    return COLUMNS.flatMap((column) => this.getCards(column));
   }
 
   private normalizeCard(card: Card): Card {
-    const fallback = card.createdAt ?? card.updatedAt ?? new Date().toISOString();
+    const fallback =
+      card.createdAt ?? card.updatedAt ?? new Date().toISOString();
     return {
       ...card,
       is_archived: card.is_archived ?? false,
@@ -48,7 +60,8 @@ export class BoardService {
     };
   }
 
-  // Filtros
+  // --- Filters ---
+
   setFilters(filters: Partial<BoardFilters>): void {
     this.filtersSubject.next({
       ...this.filtersSubject.value,
@@ -62,10 +75,10 @@ export class BoardService {
 
   resetFilters(): void {
     this.filtersSubject.next({
-      searchTerm: '',
+      searchTerm: "",
       priorities: [],
       showArchived: false,
-      dueDateFilter: 'all',
+      dueDateFilter: "all",
     });
   }
 
@@ -73,29 +86,26 @@ export class BoardService {
     const filters = this.filtersSubject.value;
     let filtered = [...cards];
 
-    // Filtrar archivadas
     if (!filters.showArchived) {
-      filtered = filtered.filter(card => !card.is_archived);
+      filtered = filtered.filter((card) => !card.is_archived);
     }
 
-    // Filtrar por búsqueda
     if (filters.searchTerm.trim()) {
       const searchLower = filters.searchTerm.toLowerCase();
-      filtered = filtered.filter(card =>
-        card.title.toLowerCase().includes(searchLower) ||
-        card.description.toLowerCase().includes(searchLower)
+      filtered = filtered.filter(
+        (card) =>
+          card.title.toLowerCase().includes(searchLower) ||
+          card.description.toLowerCase().includes(searchLower),
       );
     }
 
-    // Filtrar por prioridad
     if (filters.priorities.length > 0) {
-      filtered = filtered.filter(card =>
-        filters.priorities.includes(card.priority)
+      filtered = filtered.filter((card) =>
+        filters.priorities.includes(card.priority),
       );
     }
 
-    // Filtrar por fecha de vencimiento
-    if (filters.dueDateFilter !== 'all') {
+    if (filters.dueDateFilter !== "all") {
       filtered = this.filterByDueDate(filtered, filters.dueDateFilter);
     }
 
@@ -106,8 +116,8 @@ export class BoardService {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    return cards.filter(card => {
-      if (filter === 'none') {
+    return cards.filter((card) => {
+      if (filter === "none") {
         return !card.dueDate;
       }
 
@@ -116,15 +126,16 @@ export class BoardService {
       const dueDate = new Date(card.dueDate);
       dueDate.setHours(0, 0, 0, 0);
 
-      const diffTime = dueDate.getTime() - now.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffDays = Math.ceil(
+        (dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+      );
 
       switch (filter) {
-        case 'overdue':
+        case "overdue":
           return diffDays < 0;
-        case 'today':
+        case "today":
           return diffDays === 0;
-        case 'week':
+        case "week":
           return diffDays >= 0 && diffDays <= 7;
         default:
           return true;
@@ -132,54 +143,42 @@ export class BoardService {
     });
   }
 
-  // Estadísticas
+  // --- Statistics ---
+
   getStats(): BoardStats {
     const allCards = this.getAllCards();
     const now = new Date();
 
     const stats: BoardStats = {
       totalCards: allCards.length,
-      cardsByColumn: {},
-      cardsByPriority: {
-        low: 0,
-        medium: 0,
-        high: 0,
-      },
+      cardsByColumn: Object.fromEntries(COLUMNS.map((col) => [col, 0])),
+      cardsByPriority: { low: 0, medium: 0, high: 0 },
       overdueCards: 0,
       completedCards: 0,
       archivedCards: 0,
     };
 
-    // Contar por columna
-    this.BOARD_COLUMNS.forEach(column => {
-      stats.cardsByColumn[column] = 0;
-    });
-
-    allCards.forEach(card => {
-      // Por columna
+    allCards.forEach((card) => {
       if (stats.cardsByColumn[card.column_name] !== undefined) {
         stats.cardsByColumn[card.column_name]++;
       }
 
-      // Por prioridad
-      if (stats.cardsByPriority[card.priority] !== undefined) {
+      if (card.priority in stats.cardsByPriority) {
         stats.cardsByPriority[card.priority]++;
       }
 
-      // Archivadas
       if (card.is_archived) {
         stats.archivedCards++;
       }
 
-      // Completadas (columna "Hecho")
-      if (card.column_name === 'Hecho') {
+      // Completed cards are those in the last column ("Hecho")
+      if (card.column_name === COLUMNS[COLUMNS.length - 1]) {
         stats.completedCards++;
       }
 
-      // Atrasadas
       if (card.dueDate) {
         const dueDate = new Date(card.dueDate);
-        if (dueDate < now && card.column_name !== 'Hecho') {
+        if (dueDate < now && card.column_name !== COLUMNS[COLUMNS.length - 1]) {
           stats.overdueCards++;
         }
       }
@@ -188,54 +187,49 @@ export class BoardService {
     return stats;
   }
 
-  // Exportar/Importar
-  exportData(): BoardData {
-    const cards: Record<string, Card[]> = {};
+  // --- Import / Export ---
 
-    this.BOARD_COLUMNS.forEach(column => {
-      cards[column] = this.getCards(column);
-    });
+  exportData(): BoardData {
+    const cards = Object.fromEntries(
+      COLUMNS.map((column) => [column, this.getCards(column)]),
+    );
 
     return {
       cards,
       exportDate: new Date().toISOString(),
-      version: '1.0',
+      version: "1.0",
     };
   }
 
   exportToJSON(): string {
-    const data = this.exportData();
-    return JSON.stringify(data, null, 2);
+    return JSON.stringify(this.exportData(), null, 2);
   }
 
   downloadJSON(): void {
-    const json = this.exportToJSON();
-    const blob = new Blob([json], { type: 'application/json' });
+    const blob = new Blob([this.exportToJSON()], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = `kanban-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `kanban-backup-${new Date().toISOString().split("T")[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
   }
 
   importData(data: BoardData): boolean {
     try {
-      // Validar estructura
-      if (!data.cards || typeof data.cards !== 'object') {
-        throw new Error('Estructura de datos inválida');
+      if (!data.cards || typeof data.cards !== "object") {
+        throw new Error("Estructura de datos inválida");
       }
 
-      // Importar datos
       Object.entries(data.cards).forEach(([column, cards]) => {
-        if (this.BOARD_COLUMNS.includes(column)) {
+        if ((COLUMNS as readonly string[]).includes(column)) {
           this.saveCards(column, cards);
         }
       });
 
       return true;
     } catch (error) {
-      console.error('Error al importar datos:', error);
+      console.error("Error al importar datos:", error);
       return false;
     }
   }
@@ -246,13 +240,13 @@ export class BoardService {
       const data = JSON.parse(text) as BoardData;
       return this.importData(data);
     } catch (error) {
-      console.error('Error al leer archivo:', error);
+      console.error("Error al leer archivo:", error);
       return false;
     }
   }
 
   clearAllData(): void {
-    this.BOARD_COLUMNS.forEach(column => {
+    COLUMNS.forEach((column) => {
       localStorage.removeItem(`${this.STORAGE_PREFIX}${column}`);
     });
   }

@@ -1,11 +1,12 @@
 import { Component, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { InputText } from "primeng/inputtext";
 import { Select } from "primeng/select";
 import { ButtonModule } from "primeng/button";
 import { ConfirmDialog } from "primeng/confirmdialog";
 import { ColumnComponent } from "./components/column/column.component";
-import { ThemeSwitchComponent } from "./components/theme-switch/theme-switch.component";
+import { BoardHeaderComponent } from "./components/board-header/board-header.component";
+import { BoardFooterComponent } from "./components/board-footer/board-footer.component";
+import { FilterBarComponent } from "./components/filter-bar/filter-bar.component";
 import { BoardService } from "./services/board.service";
 import { BoardFilters, BoardStats } from "./models/card.model";
 import { SortDirection, SortOption } from "./types/sort-option";
@@ -15,9 +16,10 @@ import { SortDirection, SortOption } from "./types/sort-option";
   templateUrl: "./app.component.html",
   imports: [
     ColumnComponent,
-    ThemeSwitchComponent,
+    BoardHeaderComponent,
+    BoardFooterComponent,
+    FilterBarComponent,
     FormsModule,
-    InputText,
     Select,
     ButtonModule,
     ConfirmDialog,
@@ -30,10 +32,6 @@ export class AppComponent implements OnInit {
   sortDirection: SortDirection = "asc";
 
   searchTerm = "";
-  filterPriorities: ("low" | "medium" | "high")[] = [];
-  showArchived = false;
-  dueDateFilter: BoardFilters["dueDateFilter"] = "all";
-
   showFilters = false;
   showSortBar = false;
 
@@ -53,20 +51,6 @@ export class AppComponent implements OnInit {
     { value: "priority", label: "Prioridad" },
   ];
 
-  priorityOptions = [
-    { label: "Baja", value: "low" as const },
-    { label: "Media", value: "medium" as const },
-    { label: "Alta", value: "high" as const },
-  ];
-
-  dueDateOptions = [
-    { label: "Todas", value: "all" as const },
-    { label: "Atrasadas", value: "overdue" as const },
-    { label: "Hoy", value: "today" as const },
-    { label: "Esta semana", value: "week" as const },
-    { label: "Sin fecha", value: "none" as const },
-  ];
-
   ngOnInit(): void {
     this.refreshStats();
     this.boardService.filters$.subscribe(() => this.refreshStats());
@@ -74,17 +58,10 @@ export class AppComponent implements OnInit {
 
   onSearchChange(value: string): void {
     this.searchTerm = value;
-    this.applyFilters();
   }
 
-  togglePriority(priority: "low" | "medium" | "high"): void {
-    const idx = this.filterPriorities.indexOf(priority);
-    if (idx === -1) {
-      this.filterPriorities.push(priority);
-    } else {
-      this.filterPriorities.splice(idx, 1);
-    }
-    this.applyFilters();
+  onFiltersChange(filters: BoardFilters): void {
+    this.boardService.setFilters(filters);
   }
 
   toggleDirection(): void {
@@ -107,32 +84,6 @@ export class AppComponent implements OnInit {
       }
     };
     input.click();
-  }
-
-  resetFilters(): void {
-    this.searchTerm = "";
-    this.filterPriorities = [];
-    this.showArchived = false;
-    this.dueDateFilter = "all";
-    this.applyFilters();
-  }
-
-  get hasActiveFilters(): boolean {
-    return (
-      this.searchTerm.trim() !== "" ||
-      this.filterPriorities.length > 0 ||
-      this.showArchived ||
-      this.dueDateFilter !== "all"
-    );
-  }
-
-  applyFilters(): void {
-    this.boardService.setFilters({
-      searchTerm: this.searchTerm,
-      priorities: this.filterPriorities,
-      showArchived: this.showArchived,
-      dueDateFilter: this.dueDateFilter,
-    });
   }
 
   private refreshStats(): void {

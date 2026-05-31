@@ -16,7 +16,7 @@ import { ButtonModule } from "primeng/button";
 import { SortDirection, SortOption } from "../../types/sort-option";
 import { CardComponent } from "../card/card.component";
 import { BoardService } from "../../services/board.service";
-import { Card as CardModel } from "../../models/card.model";
+import { Card as CardModel, COLUMNS } from "../../models/card.model";
 
 type ColumnCard = CardModel;
 
@@ -26,7 +26,6 @@ type ColumnCard = CardModel;
   imports: [CardComponent, DragDropModule, ButtonModule],
 })
 export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
-  private readonly boardColumns = ["Por hacer", "En progreso", "Hecho"];
   private _sortOption: SortOption = "createdAt";
   private _sortDirection: SortDirection = "asc";
   private filtersSubscription?: Subscription;
@@ -36,7 +35,7 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
   set sortOption(value: SortOption) {
     if (this._sortOption === value) return;
     this._sortOption = value;
-    this.arrangeCards(this.cards);
+    this.cards = this.arrangeCards(this.cards);
   }
   get sortOption(): SortOption {
     return this._sortOption;
@@ -45,7 +44,7 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
   set sortDirection(value: SortDirection) {
     if (this._sortDirection === value) return;
     this._sortDirection = value;
-    this.arrangeCards(this.cards);
+    this.cards = this.arrangeCards(this.cards);
   }
   get sortDirection(): SortDirection {
     return this._sortDirection;
@@ -76,8 +75,9 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
   }
 
   applyFilters(): void {
-    this.cards = this.boardService.filterCards(this.allCards);
-    this.arrangeCards(this.cards);
+    this.cards = this.arrangeCards(
+      this.boardService.filterCards(this.allCards),
+    );
   }
 
   saveCards(): void {
@@ -91,17 +91,20 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
       : 1;
     const timestamp = new Date().toISOString();
 
-    this.allCards.push({
-      id: newId,
-      title: "Nuevo titulo",
-      description: "Nueva descripcion",
-      column_name: this.column_name,
-      priority: "low",
-      is_archived: false,
-      createdAt: timestamp,
-      updatedAt: timestamp,
-      dueDate: null,
-    });
+    this.allCards = [
+      ...this.allCards,
+      {
+        id: newId,
+        title: "Nuevo titulo",
+        description: "Nueva descripcion",
+        column_name: this.column_name,
+        priority: "low",
+        is_archived: false,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        dueDate: null,
+      },
+    ];
     this.saveCards();
   }
 
@@ -111,16 +114,16 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
   }
 
   updateCard(item: ColumnCard): void {
-    const index = this.allCards.findIndex((i) => i.id === item.id);
-    if (index === -1) return;
-    this.allCards[index] = { ...item };
+    this.allCards = this.allCards.map((c) =>
+      c.id === item.id ? { ...item } : c,
+    );
     this.saveCards();
   }
 
   drop(event: CdkDragDrop<ColumnCard[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
-      this.arrangeCards();
+      this.cards = this.arrangeCards(this.cards);
       this.saveCards();
       return;
     }
@@ -135,15 +138,17 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
     const movedCard = event.container.data[event.currentIndex];
     movedCard.column_name = this.column_name;
     movedCard.updatedAt = new Date().toISOString();
-    this.arrangeCards(event.container.data);
+    this.cards = this.arrangeCards([...event.container.data]);
 
     const previousColumnName = this.getColumnNameFromDropListId(
       event.previousContainer.id,
     );
 
     if (previousColumnName) {
-      this.arrangeCards(event.previousContainer.data);
-      this.persistColumn(previousColumnName, event.previousContainer.data);
+      const previousCards = this.arrangeCards([
+        ...event.previousContainer.data,
+      ]);
+      this.persistColumn(previousColumnName, previousCards);
     }
 
     this.saveCards();
@@ -154,9 +159,9 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
   }
 
   get connectedDropLists(): string[] {
-    return this.boardColumns
-      .filter((column) => column !== this.column_name)
-      .map((column) => this.toDropListId(column));
+    return COLUMNS.filter((column) => column !== this.column_name).map(
+      (column) => this.toDropListId(column),
+    );
   }
 
   private persistColumn(columnName: string, cards: ColumnCard[]): void {
@@ -168,20 +173,15 @@ export class ColumnComponent implements AfterContentChecked, OnInit, OnDestroy {
   }
 
   private getColumnNameFromDropListId(id: string): string | undefined {
-    return this.boardColumns.find((column) => this.toDropListId(column) === id);
+    return COLUMNS.find((column) => this.toDropListId(column) === id);
   }
 
-  private arrangeCards(cards: ColumnCard[] = this.cards): void {
-    if (!cards.length) return;
+  private arrangeCards(cards: ColumnCard[]): ColumnCard[] {
+    if (!cards.length) return cards;
     const comparator = this.getComparator();
-    const active: ColumnCard[] = [];
-    const archived: ColumnCard[] = [];
-    cards.forEach((card) =>
-      card.is_archived ? archived.push(card) : active.push(card),
-    );
-    active.sort(comparator);
-    archived.sort(comparator);
-    cards.splice(0, cards.length, ...active, ...archived);
+    const active = cards.filter((c) => !c.is_archived).sort(comparator);
+    const archived = cards.filter((c) => c.is_archived).sort(comparator);
+    return [...active, ...archived];
   }
 
   private getComparator(): (a: ColumnCard, b: ColumnCard) => number {

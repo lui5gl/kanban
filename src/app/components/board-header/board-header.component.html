@@ -1,0 +1,74 @@
+<div
+  class="mx-auto flex max-w-7xl items-center justify-between px-6 py-2.5"
+>
+  <!-- Left: Brand -->
+  <div class="flex items-center gap-2.5">
+    <div
+      class="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900 dark:bg-zinc-100"
+    >
+      <i
+        class="ti ti-layout-kanban text-sm text-white dark:text-zinc-900"
+      ></i>
+    </div>
+    <span
+      class="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-100"
+      >Kanban</span
+    >
+  </div>
+
+  <!-- Center: Search -->
+  <div class="relative mx-4 w-full max-w-sm">
+    <i
+      class="ti ti-search absolute top-1/2 left-3 -translate-y-1/2 text-sm text-zinc-400 dark:text-zinc-500"
+    ></i>
+    <input
+      type="text"
+      pInputText
+      placeholder="Buscar..."
+      [ngModel]="searchTerm"
+      (ngModelChange)="onSearchChange($event)"
+      class="w-full rounded-md border-zinc-200 bg-zinc-50 pl-8 text-sm placeholder:text-zinc-400 focus:border-zinc-300 focus:bg-white dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-600 dark:focus:bg-zinc-800"
+    />
+  </div>
+
+  <!-- Right: Actions -->
+  <div class="flex items-center gap-1">
+    <app-theme-switch />
+    <div class="mx-1 h-4 w-px bg-zinc-200 dark:bg-zinc-700"></div>
+    <p-button
+      [icon]="showFilters ? 'ti ti-x' : 'ti ti-filter'"
+      (onClick)="toggleFilters()"
+      [text]="true"
+      severity="secondary"
+      size="small"
+      [class]="showFilters ? 'text-zinc-900 dark:text-zinc-100' : ''"
+      title="Filtros"
+    />
+    <p-button
+      [icon]="showSortBar ? 'ti ti-x' : 'ti ti-arrows-sort'"
+      (onClick)="toggleSortBar()"
+      [text]="true"
+      severity="secondary"
+      size="small"
+      [class]="showSortBar ? 'text-zinc-900 dark:text-zinc-100' : ''"
+      title="Ordenar"
+    />
+    <div class="mx-1 h-4 w-px bg-zinc-200 dark:bg-zinc-700"></div>
+    <p-button
+      icon="ti ti-upload"
+      (onClick)="onImport()"
+      [text]="true"
+      severity="secondary"
+      size="small"
+      title="Importar"
+    />
+    <p-button
+      icon="ti ti-download"
+      (onClick)="onExport()"
+      [text]="true"
+      severity="secondary"
+      size="small"
+      title="Exportar"
+    />
+  </div>
+</div>
