@@ -2,6 +2,8 @@
 @import "tailwindcss";
 @import "@tabler/icons-webfont/dist/tabler-icons.min.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-*: initial;
   --font-sans: Onest Variable, system-ui;
@@ -20,6 +22,307 @@
     U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Dark mode base */
+html {
+  transition: color-scheme 0.3s ease;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* ── PrimeNG dark mode overrides ────────────────────────────────── */
+html.dark {
+  /* Surface / backgrounds */
+  --p-surface-0: #09090b;
+  --p-surface-50: #18181b;
+  --p-surface-100: #27272a;
+  --p-surface-200: #2e2e33;
+  --p-surface-300: #3f3f46;
+  --p-surface-400: #52525b;
+  --p-surface-500: #71717a;
+  --p-surface-600: #9f9fa9;
+  --p-surface-700: #d4d4d8;
+  --p-surface-800: #e4e4e7;
+  --p-surface-900: #f4f4f5;
+  --p-surface-950: #fafafa;
+
+  /* Primary */
+  --p-primary-color: #a1a1aa;
+  --p-primary-contrast-color: #09090b;
+  --p-primary-hover-color: #d4d4d8;
+  --p-primary-active-color: #e4e4e7;
+
+  /* InputText */
+  --p-inputtext-background: #18181b;
+  --p-inputtext-color: #f4f4f5;
+  --p-inputtext-border-color: #3f3f46;
+  --p-inputtext-hover-border-color: #52525b;
+  --p-inputtext-focus-border-color: #71717a;
+  --p-inputtext-placeholder-color: #71717a;
+
+  /* Select / Dropdown */
+  --p-select-background: #18181b;
+  --p-select-color: #f4f4f5;
+  --p-select-border-color: #3f3f46;
+  --p-select-hover-border-color: #52525b;
+  --p-select-focus-border-color: #71717a;
+  --p-select-option-selected-background: #27272a;
+  --p-select-option-selected-color: #f4f4f5;
+  --p-select-option-focus-background: #27272a;
+  --p-select-option-focus-color: #f4f4f5;
+  --p-select-overlay-background: #18181b;
+  --p-select-overlay-border-color: #3f3f46;
+  --p-select-overlay-color: #f4f4f5;
+  --p-select-placeholder-color: #71717a;
+  --p-select-clear-icon-color: #71717a;
+
+  /* DatePicker / Calendar */
+  --p-datepicker-background: #18181b;
+  --p-datepicker-color: #f4f4f5;
+  --p-datepicker-border-color: #3f3f46;
+  --p-datepicker-hover-border-color: #52525b;
+  --p-datepicker-focus-border-color: #71717a;
+  --p-datepicker-header-background: #18181b;
+  --p-datepicker-header-color: #f4f4f5;
+  --p-datepicker-date-color: #d4d4d8;
+  --p-datepicker-date-hover-background: #27272a;
+  --p-datepicker-date-hover-color: #f4f4f5;
+  --p-datepicker-date-selected-background: #3f3f46;
+  --p-datepicker-date-selected-color: #f4f4f5;
+  --p-datepicker-today-background: #27272a;
+  --p-datepicker-today-color: #f4f4f5;
+  --p-datepicker-overlay-background: #18181b;
+  --p-datepicker-overlay-border-color: #3f3f46;
+  --p-datepicker-overlay-color: #f4f4f5;
+
+  /* Button (secondary/text) */
+  --p-button-secondary-background: transparent;
+  --p-button-secondary-color: #a1a1aa;
+  --p-button-secondary-border-color: transparent;
+  --p-button-secondary-hover-background: #27272a;
+  --p-button-secondary-hover-color: #f4f4f5;
+  --p-button-secondary-hover-border-color: transparent;
+  --p-button-secondary-active-background: #3f3f46;
+  --p-button-secondary-active-color: #f4f4f5;
+  --p-button-secondary-active-border-color: transparent;
+
+  /* ConfirmDialog */
+  --p-confirmdialog-background: #18181b;
+  --p-confirmdialog-color: #f4f4f5;
+  --p-confirmdialog-border-color: #3f3f46;
+
+  /* Dialog / Overlay */
+  --p-overlay-background: #18181b;
+  --p-overlay-border-color: #3f3f46;
+  --p-overlay-color: #f4f4f5;
+
+  /* Checkbox */
+  --p-checkbox-background: #18181b;
+  --p-checkbox-border-color: #3f3f46;
+  --p-checkbox-hover-border-color: #52525b;
+  --p-checkbox-checked-background: #a1a1aa;
+  --p-checkbox-checked-border-color: #a1a1aa;
+  --p-checkbox-checked-color: #09090b;
+
+  /* Focus ring */
+  --p-focus-ring-color: #71717a;
+}
+
+/* Specific PrimeNG component dark overrides */
+html.dark .p-inputtext {
+  background: #18181b;
+  color: #f4f4f5;
+  border-color: #3f3f46;
+}
+
+html.dark .p-inputtext:hover {
+  border-color: #52525b;
+}
+
+html.dark .p-inputtext:focus,
+html.dark .p-inputtext:enabled:focus {
+  border-color: #71717a;
+  box-shadow: 0 0 0 1px #71717a;
+}
+
+html.dark .p-inputtext::placeholder {
+  color: #71717a;
+}
+
+html.dark .p-select {
+  background: #18181b;
+  color: #f4f4f5;
+  border-color: #3f3f46;
+}
+
+html.dark .p-select:hover {
+  border-color: #52525b;
+}
+
+html.dark .p-select:focus,
+html.dark .p-select.p-focus {
+  border-color: #71717a;
+  box-shadow: 0 0 0 1px #71717a;
+}
+
+html.dark .p-select-label {
+  color: #f4f4f5;
+}
+
+html.dark .p-select-label.p-placeholder {
+  color: #71717a;
+}
+
+html.dark .p-select-overlay {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #f4f4f5;
+}
+
+html.dark .p-select-option {
+  color: #d4d4d8;
+}
+
+html.dark .p-select-option:hover,
+html.dark .p-select-option.p-focus {
+  background: #27272a;
+  color: #f4f4f5;
+}
+
+html.dark .p-select-option.p-selected {
+  background: #3f3f46;
+  color: #f4f4f5;
+}
+
+html.dark .p-select-clear-icon {
+  color: #71717a;
+}
+
+html.dark .p-select-dropdown {
+  color: #71717a;
+}
+
+html.dark .p-datepicker {
+  background: #18181b;
+  color: #f4f4f5;
+  border-color: #3f3f46;
+}
+
+html.dark .p-datepicker:hover {
+  border-color: #52525b;
+}
+
+html.dark .p-datepicker.p-focus {
+  border-color: #71717a;
+  box-shadow: 0 0 0 1px #71717a;
+}
+
+html.dark .p-datepicker-input {
+  background: #18181b;
+  color: #f4f4f5;
+}
+
+html.dark .p-datepicker-panel {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #f4f4f5;
+}
+
+html.dark .p-datepicker-header {
+  background: #18181b;
+  color: #f4f4f5;
+}
+
+html.dark .p-datepicker-nav-button {
+  color: #a1a1aa;
+}
+
+html.dark .p-datepicker-nav-button:hover {
+  background: #27272a;
+  color: #f4f4f5;
+}
+
+html.dark .p-datepicker-day-view .p-datepicker-weekday-cell {
+  color: #71717a;
+}
+
+html.dark .p-datepicker-day {
+  color: #d4d4d8;
+}
+
+html.dark .p-datepicker-day:hover {
+  background: #27272a;
+  color: #f4f4f5;
+}
+
+html.dark .p-datepicker-day.p-datepicker-day-selected {
+  background: #3f3f46;
+  color: #f4f4f5;
+}
+
+html.dark .p-datepicker-day.p-datepicker-day-today {
+  background: #27272a;
+  color: #f4f4f5;
+}
+
+html.dark .p-datepicker-dropdown {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #71717a;
+}
+
+html.dark .p-datepicker-dropdown:hover {
+  border-color: #52525b;
+  color: #d4d4d8;
+}
+
+html.dark .p-button.p-button-secondary.p-button-text {
+  color: #a1a1aa;
+}
+
+html.dark .p-button.p-button-secondary.p-button-text:hover {
+  background: #27272a;
+  color: #f4f4f5;
+}
+
+html.dark .p-button.p-button-danger {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+
+html.dark .p-confirmdialog {
+  background: #18181b;
+  color: #f4f4f5;
+  border-color: #3f3f46;
+}
+
+html.dark .p-confirmdialog-header {
+  background: #18181b;
+  color: #f4f4f5;
+  border-color: #3f3f46;
+}
+
+html.dark .p-confirmdialog-footer {
+  border-color: #3f3f46;
+}
+
+html.dark .p-dialog-mask {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+html.dark .p-overlaypanel,
+html.dark .p-overlay {
+  background: #18181b;
+  border-color: #3f3f46;
+  color: #f4f4f5;
+}
+
+html.dark .p-icon {
+  color: inherit;
+}
+
 /* Drag & Drop */
 .cdk-drag-preview {
   box-sizing: border-box;
@@ -32,6 +335,14 @@
     0 0 0 1px rgb(228 228 231);
   opacity: 0.95;
   transform: rotate(1.5deg);
+}
+
+html.dark .cdk-drag-preview {
+  background: #27272a;
+  color: #f4f4f5;
+  box-shadow:
+    0 25px 50px -12px rgb(0 0 0 / 0.5),
+    0 0 0 1px rgb(63 63 70);
 }
 
 .cdk-drag-placeholder {
@@ -47,6 +358,10 @@
   content: attr(data-placeholder);
   color: #a1a1aa;
   pointer-events: none;
+}
+
+html.dark [contenteditable][data-placeholder]:empty::before {
+  color: #71717a;
 }
 
 /* Smooth list animations */

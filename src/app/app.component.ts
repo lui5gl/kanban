@@ -5,6 +5,7 @@ import { Select } from "primeng/select";
 import { ButtonModule } from "primeng/button";
 import { ConfirmDialog } from "primeng/confirmdialog";
 import { ColumnComponent } from "./components/column/column.component";
+import { ThemeSwitchComponent } from "./components/theme-switch/theme-switch.component";
 import { BoardService } from "./services/board.service";
 import { BoardFilters, BoardStats } from "./models/card.model";
 import { SortDirection, SortOption } from "./types/sort-option";
@@ -14,6 +15,7 @@ import { SortDirection, SortOption } from "./types/sort-option";
   templateUrl: "./app.component.html",
   imports: [
     ColumnComponent,
+    ThemeSwitchComponent,
     FormsModule,
     InputText,
     Select,

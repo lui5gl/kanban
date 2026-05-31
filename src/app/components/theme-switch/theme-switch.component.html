@@ -1,0 +1,22 @@
+<div class="flex items-center rounded-lg border border-zinc-200 bg-zinc-100 p-0.5 dark:border-zinc-700 dark:bg-zinc-800">
+  @for (mode of modes; track mode.value) {
+    <button
+      type="button"
+      (click)="setTheme(mode.value)"
+      class="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors"
+      [class.bg-white]="(theme$ | async) === mode.value"
+      [class.text-zinc-900]="(theme$ | async) === mode.value"
+      [class.shadow-sm]="(theme$ | async) === mode.value"
+      [class.dark:bg-zinc-600]="(theme$ | async) === mode.value"
+      [class.dark:text-white]="(theme$ | async) === mode.value"
+      [class.text-zinc-500]="(theme$ | async) !== mode.value"
+      [class.hover:text-zinc-700]="(theme$ | async) !== mode.value"
+      [class.dark:text-zinc-400]="(theme$ | async) !== mode.value"
+      [class.dark:hover:text-zinc-200]="(theme$ | async) !== mode.value"
+      [title]="mode.label"
+    >
+      <i [class]="mode.icon + ' text-sm'"></i>
+      <span class="hidden sm:inline">{{ mode.label }}</span>
+    </button>
+  }
+</div>

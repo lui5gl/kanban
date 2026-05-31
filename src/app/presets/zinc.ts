@@ -54,6 +54,28 @@ export const ZincPreset = definePreset(Aura, {
           activeColor: "{primary.700}",
         },
       },
+      dark: {
+        surface: {
+          0: "#09090b",
+          50: "#18181b",
+          100: "#27272a",
+          200: "#2e2e33",
+          300: "#3f3f46",
+          400: "#52525b",
+          500: "#71717a",
+          600: "#9f9fa9",
+          700: "#d4d4d8",
+          800: "#e4e4e7",
+          900: "#f4f4f5",
+          950: "#fafafa",
+        },
+        primary: {
+          color: "{primary.400}",
+          contrastColor: "#09090b",
+          hoverColor: "{primary.300}",
+          activeColor: "{primary.200}",
+        },
+      },
     },
   },
 });

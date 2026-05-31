@@ -15,6 +15,9 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       theme: {
         preset: ZincPreset,
+        options: {
+          darkModeSelector: ".dark",
+        },
       },
     }),
     ConfirmationService,

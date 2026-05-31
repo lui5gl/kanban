@@ -1,19 +1,24 @@
 <p-confirmdialog />
 
-<div class="flex h-screen flex-col bg-zinc-100">
+<div class="flex h-screen flex-col bg-zinc-100 dark:bg-zinc-950">
   <!-- Main toolbar -->
-  <header class="z-40 border-b border-zinc-200 bg-white">
+  <header
+    class="z-40 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+  >
     <div
       class="mx-auto flex max-w-7xl items-center justify-between px-6 py-2.5"
     >
       <!-- Left: Brand -->
       <div class="flex items-center gap-2.5">
         <div
-          class="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900"
+          class="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900 dark:bg-zinc-100"
         >
-          <i class="ti ti-layout-kanban text-sm text-white"></i>
+          <i
+            class="ti ti-layout-kanban text-sm text-white dark:text-zinc-900"
+          ></i>
         </div>
-        <span class="text-sm font-bold tracking-tight text-zinc-900"
+        <span
+          class="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-100"
           >Kanban</span
         >
       </div>
@@ -21,7 +26,7 @@
       <!-- Center: Search -->
       <div class="relative mx-4 w-full max-w-sm">
         <i
-          class="ti ti-search absolute top-1/2 left-3 -translate-y-1/2 text-sm text-zinc-400"
+          class="ti ti-search absolute top-1/2 left-3 -translate-y-1/2 text-sm text-zinc-400 dark:text-zinc-500"
         ></i>
         <input
           type="text"
@@ -29,19 +34,21 @@
           placeholder="Buscar..."
           [ngModel]="searchTerm"
           (ngModelChange)="onSearchChange($event)"
-          class="w-full rounded-md border-zinc-200 bg-zinc-50 pl-8 text-sm placeholder:text-zinc-400 focus:border-zinc-300 focus:bg-white"
+          class="w-full rounded-md border-zinc-200 bg-zinc-50 pl-8 text-sm placeholder:text-zinc-400 focus:border-zinc-300 focus:bg-white dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-600 dark:focus:bg-zinc-800"
         />
       </div>
 
       <!-- Right: Actions -->
       <div class="flex items-center gap-1">
+        <app-theme-switch />
+        <div class="mx-1 h-4 w-px bg-zinc-200 dark:bg-zinc-700"></div>
         <p-button
           [icon]="showFilters ? 'ti ti-x' : 'ti ti-filter'"
           (onClick)="showFilters = !showFilters"
           [text]="true"
           severity="secondary"
           size="small"
-          [class]="showFilters ? 'text-zinc-900' : ''"
+          [class]="showFilters ? 'text-zinc-900 dark:text-zinc-100' : ''"
           title="Filtros"
         />
         <p-button
@@ -50,10 +57,10 @@
           [text]="true"
           severity="secondary"
           size="small"
-          [class]="showSortBar ? 'text-zinc-900' : ''"
+          [class]="showSortBar ? 'text-zinc-900 dark:text-zinc-100' : ''"
           title="Ordenar"
         />
-        <div class="mx-1 h-4 w-px bg-zinc-200"></div>
+        <div class="mx-1 h-4 w-px bg-zinc-200 dark:bg-zinc-700"></div>
         <p-button
           icon="ti ti-upload"
           (onClick)="importData()"
@@ -75,11 +82,14 @@
 
     <!-- Filters bar (toggle) -->
     @if (showFilters) {
-      <div class="border-t border-zinc-100 bg-zinc-50">
+      <div
+        class="border-t border-zinc-100 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"
+      >
         <div class="mx-auto flex max-w-7xl items-center gap-3 px-6 py-2">
           <!-- Priority pills -->
           <div class="flex items-center gap-1">
-            <span class="mr-1 text-[11px] font-medium text-zinc-400 uppercase"
+            <span
+              class="mr-1 text-[11px] font-medium text-zinc-400 uppercase dark:text-zinc-500"
               >Prioridad</span
             >
             @for (p of priorityOptions; track p.value) {
@@ -93,7 +103,16 @@
                 [class.text-emerald-700]="
                   p.value === 'low' && filterPriorities.includes(p.value)
                 "
+                [class.dark:bg-emerald-900]="
+                  p.value === 'low' && filterPriorities.includes(p.value)
+                "
+                [class.dark:text-emerald-300]="
+                  p.value === 'low' && filterPriorities.includes(p.value)
+                "
                 [class.hover:bg-emerald-50]="
+                  p.value === 'low' && !filterPriorities.includes(p.value)
+                "
+                [class.dark:hover:bg-emerald-950]="
                   p.value === 'low' && !filterPriorities.includes(p.value)
                 "
                 [class.bg-amber-100]="
@@ -102,7 +121,16 @@
                 [class.text-amber-700]="
                   p.value === 'medium' && filterPriorities.includes(p.value)
                 "
+                [class.dark:bg-amber-900]="
+                  p.value === 'medium' && filterPriorities.includes(p.value)
+                "
+                [class.dark:text-amber-300]="
+                  p.value === 'medium' && filterPriorities.includes(p.value)
+                "
                 [class.hover:bg-amber-50]="
+                  p.value === 'medium' && !filterPriorities.includes(p.value)
+                "
+                [class.dark:hover:bg-amber-950]="
                   p.value === 'medium' && !filterPriorities.includes(p.value)
                 "
                 [class.bg-red-100]="
@@ -111,18 +139,29 @@
                 [class.text-red-700]="
                   p.value === 'high' && filterPriorities.includes(p.value)
                 "
+                [class.dark:bg-red-900]="
+                  p.value === 'high' && filterPriorities.includes(p.value)
+                "
+                [class.dark:text-red-300]="
+                  p.value === 'high' && filterPriorities.includes(p.value)
+                "
                 [class.hover:bg-red-50]="
+                  p.value === 'high' && !filterPriorities.includes(p.value)
+                "
+                [class.dark:hover:bg-red-950]="
                   p.value === 'high' && !filterPriorities.includes(p.value)
                 "
                 [class.bg-zinc-100]="!filterPriorities.includes(p.value)"
                 [class.text-zinc-500]="!filterPriorities.includes(p.value)"
+                [class.dark:bg-zinc-800]="!filterPriorities.includes(p.value)"
+                [class.dark:text-zinc-400]="!filterPriorities.includes(p.value)"
               >
                 {{ p.label }}
               </button>
             }
           </div>
 
-          <div class="h-4 w-px bg-zinc-200"></div>
+          <div class="h-4 w-px bg-zinc-200 dark:bg-zinc-700"></div>
 
           <!-- Date filter -->
           <p-select
@@ -145,6 +184,11 @@
             [class.bg-zinc-100]="!showArchived"
             [class.text-zinc-500]="!showArchived"
             [class.hover:bg-zinc-200]="!showArchived"
+            [class.dark:bg-zinc-100]="showArchived"
+            [class.dark:text-zinc-900]="showArchived"
+            [class.dark:bg-zinc-800]="!showArchived"
+            [class.dark:text-zinc-400]="!showArchived"
+            [class.dark:hover:bg-zinc-700]="!showArchived"
           >
             Archivadas
           </button>
@@ -154,7 +198,7 @@
             <button
               type="button"
               (click)="resetFilters()"
-              class="ml-auto text-xs font-medium text-red-500 hover:text-red-600"
+              class="ml-auto text-xs font-medium text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
             >
               Limpiar filtros
             </button>
@@ -165,9 +209,12 @@
 
     <!-- Sort bar (toggle) -->
     @if (showSortBar) {
-      <div class="border-t border-zinc-100 bg-zinc-50">
+      <div
+        class="border-t border-zinc-100 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"
+      >
         <div class="mx-auto flex max-w-7xl items-center gap-3 px-6 py-2">
-          <span class="text-[11px] font-medium text-zinc-400 uppercase"
+          <span
+            class="text-[11px] font-medium text-zinc-400 uppercase dark:text-zinc-500"
             >Ordenar por</span
           >
           <p-select
@@ -180,7 +227,7 @@
           <button
             type="button"
             (click)="toggleDirection()"
-            class="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200"
+            class="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-700"
           >
             <i
               class="ti text-sm"
@@ -216,10 +263,14 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-zinc-200 bg-white">
+  <footer
+    class="border-t border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+  >
     <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
-      <div class="flex items-center gap-5 text-xs text-zinc-500">
-        <span class="font-semibold text-zinc-700"
+      <div
+        class="flex items-center gap-5 text-xs text-zinc-500 dark:text-zinc-400"
+      >
+        <span class="font-semibold text-zinc-700 dark:text-zinc-200"
           >{{ stats.totalCards }} tarjetas</span
         >
         <span class="flex items-center gap-1.5">
@@ -237,18 +288,24 @@
       </div>
       <div class="flex items-center gap-4 text-xs">
         @if (stats.overdueCards > 0) {
-          <span class="flex items-center gap-1.5 font-medium text-red-500">
+          <span
+            class="flex items-center gap-1.5 font-medium text-red-500 dark:text-red-400"
+          >
             <i class="ti ti-alert-triangle text-sm"></i>
             {{ stats.overdueCards }} atrasadas
           </span>
         }
         @if (stats.archivedCards > 0) {
-          <span class="flex items-center gap-1.5 text-zinc-400">
+          <span
+            class="flex items-center gap-1.5 text-zinc-400 dark:text-zinc-500"
+          >
             <i class="ti ti-archive text-sm"></i>
             {{ stats.archivedCards }} archivadas
           </span>
         }
-        <span class="flex items-center gap-1.5 text-zinc-400">
+        <span
+          class="flex items-center gap-1.5 text-zinc-400 dark:text-zinc-500"
+        >
           <i class="ti ti-check text-sm"></i>
           {{ stats.completedCards }} completadas
         </span>
