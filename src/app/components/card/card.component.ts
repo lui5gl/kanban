@@ -13,7 +13,6 @@ import {
 import { FormsModule } from "@angular/forms";
 import { Select } from "primeng/select";
 import { DatePicker } from "primeng/datepicker";
-import { ButtonModule } from "primeng/button";
 import { ConfirmationService } from "primeng/api";
 import { DateToggleService } from "../../services/date-toggle.service";
 import { Card as CardModel } from "../../models/card.model";
@@ -29,7 +28,6 @@ import { Card as CardModel } from "../../models/card.model";
     FormsModule,
     Select,
     DatePicker,
-    ButtonModule,
   ],
 })
 export class CardComponent implements OnChanges {

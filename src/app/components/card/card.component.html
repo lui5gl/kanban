@@ -1,146 +1,147 @@
 <section
   cdkDrag
   [cdkDragDisabled]="is_archived"
-  class="group relative cursor-default rounded-lg border border-zinc-200 bg-white transition-all duration-150 hover:border-zinc-300 hover:shadow-md"
-  [class.opacity-40]="is_archived"
-  [class.cursor-not-allowed]="is_archived"
+  class="group relative rounded-xl border border-zinc-200/80 bg-white p-4 transition-shadow duration-200 hover:border-zinc-300 hover:shadow-lg"
+  [class.opacity-50]="is_archived"
+  [class.pointer-events-none]="is_archived"
 >
-  <!-- Left priority stripe -->
+  <!-- Top: priority accent line -->
   <div
-    class="absolute top-0 bottom-0 left-0 w-[3px] rounded-l-lg"
+    class="absolute top-0 right-4 left-4 h-[2px] rounded-b-full"
     [class.bg-emerald-400]="priority === 'low'"
     [class.bg-amber-400]="priority === 'medium'"
     [class.bg-red-400]="priority === 'high'"
   ></div>
 
-  <!-- Card body -->
-  <div class="flex flex-col gap-2.5 p-3.5 pl-5">
-    <!-- Row 1: Drag handle + Title + Actions -->
-    <div class="flex items-start gap-1.5">
-      <i
-        cdkDragHandle
-        class="ti ti-grip-vertical mt-0.5 shrink-0 cursor-grab text-sm text-zinc-300 opacity-0 transition-opacity group-hover:opacity-100"
-      ></i>
+  <!-- Header: title row -->
+  <div class="flex items-center gap-2">
+    <i
+      cdkDragHandle
+      class="ti ti-grip-vertical shrink-0 cursor-grab text-zinc-300 opacity-0 transition-opacity group-hover:opacity-100"
+    ></i>
 
-      <h3
-        [attr.id]="getElementId('title')"
-        (blur)="saveCard()"
-        [attr.contenteditable]="is_archived ? 'false' : 'true'"
-        class="min-w-0 flex-1 cursor-text text-sm leading-snug font-semibold wrap-break-word text-zinc-900 outline-none selection:bg-zinc-500 selection:text-white"
-      >
-        {{ title }}
-      </h3>
-
-      <!-- Action menu -->
-      <div class="relative">
-        <p-button
-          icon="ti ti-dots"
-          (onClick)="toggleMenu($event)"
-          [text]="true"
-          severity="secondary"
-          size="small"
-          styleClass="!h-6 !w-6 !p-0 opacity-0 group-hover:opacity-100"
-        />
-        @if (isActionMenuOpen) {
-          <div
-            (click)="$event.stopPropagation()"
-            class="absolute top-7 right-0 z-50 w-40 overflow-hidden rounded-lg border border-zinc-200 bg-white py-1 shadow-lg"
-          >
-            <button
-              type="button"
-              class="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
-              (click)="toggleArchiveState($event)"
-            >
-              <i
-                class="ti ti-archive{{ is_archived ? '-off' : '' }} text-base"
-              ></i>
-              {{ is_archived ? "Desarchivar" : "Archivar" }}
-            </button>
-            <button
-              type="button"
-              class="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50"
-              (click)="deleteCard($event)"
-            >
-              <i class="ti ti-trash text-base"></i>
-              Eliminar
-            </button>
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Row 2: Description -->
-    <p
-      [attr.id]="getElementId('description')"
+    <h3
+      [attr.id]="getElementId('title')"
       (blur)="saveCard()"
       [attr.contenteditable]="is_archived ? 'false' : 'true'"
-      class="cursor-text text-[13px] leading-relaxed wrap-break-word outline-none selection:bg-zinc-500 selection:text-white"
-      [class.text-zinc-500]="description"
-      [class.text-zinc-400]="!description"
-      [attr.data-placeholder]="!description ? 'Añadir descripción…' : null"
+      class="min-w-0 flex-1 truncate text-[15px] leading-snug font-semibold text-zinc-900 outline-none selection:bg-zinc-500 selection:text-white"
     >
-      {{ description }}
-    </p>
+      {{ title }}
+    </h3>
 
-    <!-- Row 3: Priority & Date -->
-    <div class="grid grid-cols-2 gap-2.5 pt-0.5">
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-[10px] font-semibold tracking-wider text-zinc-400 uppercase"
-        >
-          Prioridad
-        </label>
-        <p-select
-          [options]="priorityOptions"
-          [(ngModel)]="priority"
-          optionLabel="label"
-          optionValue="value"
-          [disabled]="is_archived"
-          (onChange)="saveCard()"
-          styleClass="w-full"
-        />
-      </div>
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-[10px] font-semibold tracking-wider text-zinc-400 uppercase"
-        >
-          Entrega
-        </label>
-        <p-datepicker
-          [(ngModel)]="dueDateObj"
-          [disabled]="is_archived"
-          (onChange)="saveCard()"
-          dateFormat="dd/mm/yy"
-          [showIcon]="true"
-          iconDisplay="input"
-          styleClass="w-full"
-        />
-      </div>
-    </div>
-
-    <!-- Row 4: Footer -->
-    <div
-      class="flex items-center justify-between border-t border-zinc-100 pt-2 text-[11px]"
+    <!-- Priority badge -->
+    <span
+      class="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold tracking-wide uppercase"
+      [class.bg-emerald-50]="priority === 'low'"
+      [class.text-emerald-600]="priority === 'low'"
+      [class.bg-amber-50]="priority === 'medium'"
+      [class.text-amber-600]="priority === 'medium'"
+      [class.bg-red-50]="priority === 'high'"
+      [class.text-red-600]="priority === 'high'"
     >
-      <span
-        class="font-medium"
-        [class.text-zinc-400]="!isOverdue && !dueDate"
-        [class.text-zinc-500]="!isOverdue && dueDate"
-        [class.text-red-500]="isOverdue"
+      {{
+        priority === "low" ? "Baja" : priority === "medium" ? "Media" : "Alta"
+      }}
+    </span>
+
+    <!-- Menu -->
+    <div class="relative shrink-0">
+      <button
+        type="button"
+        (click)="toggleMenu($event)"
+        class="flex h-7 w-7 items-center justify-center rounded-md text-zinc-400 opacity-0 transition-all group-hover:opacity-100 hover:bg-zinc-100 hover:text-zinc-600"
       >
-        @if (isOverdue) {
-          <i class="ti ti-alert-triangle-filled mr-1 text-xs"></i>
-        }
-        {{ dueDate ? daysUntilDue : "Sin fecha" }}
-      </span>
+        <i class="ti ti-dots text-base"></i>
+      </button>
 
-      <span class="text-zinc-400">
-        @if (dateToggle.showCreated$ | async) {
-          {{ createdAt | date: "dd/MM HH:mm" }}
-        } @else {
-          {{ updatedAt | date: "dd/MM HH:mm" }}
-        }
-      </span>
+      @if (isActionMenuOpen) {
+        <div
+          (click)="$event.stopPropagation()"
+          class="absolute top-8 right-0 z-50 w-44 rounded-xl border border-zinc-200 bg-white py-1 shadow-lg"
+        >
+          <button
+            type="button"
+            class="flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-sm text-zinc-600 transition-colors hover:bg-zinc-50"
+            (click)="toggleArchiveState($event)"
+          >
+            <i
+              class="ti ti-archive{{ is_archived ? '-off' : '' }} text-base"
+            ></i>
+            {{ is_archived ? "Desarchivar" : "Archivar" }}
+          </button>
+          <button
+            type="button"
+            class="flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50"
+            (click)="deleteCard($event)"
+          >
+            <i class="ti ti-trash text-base"></i>
+            Eliminar
+          </button>
+        </div>
+      }
     </div>
+  </div>
+
+  <!-- Description -->
+  <p
+    [attr.id]="getElementId('description')"
+    (blur)="saveCard()"
+    [attr.contenteditable]="is_archived ? 'false' : 'true'"
+    class="mt-2.5 cursor-text text-sm leading-relaxed text-zinc-500 outline-none selection:bg-zinc-500 selection:text-white"
+    [class.text-zinc-300]="!description"
+    [attr.data-placeholder]="!description ? 'Añadir descripción…' : null"
+  >
+    {{ description }}
+  </p>
+
+  <!-- Controls: priority & due date -->
+  <div class="mt-3 grid grid-cols-2 gap-3">
+    <div>
+      <p-select
+        [options]="priorityOptions"
+        [(ngModel)]="priority"
+        optionLabel="label"
+        optionValue="value"
+        [disabled]="is_archived"
+        (onChange)="saveCard()"
+        styleClass="w-full"
+      />
+    </div>
+    <div>
+      <p-datepicker
+        [(ngModel)]="dueDateObj"
+        [disabled]="is_archived"
+        (onChange)="saveCard()"
+        dateFormat="dd/mm/yy"
+        [showIcon]="true"
+        iconDisplay="input"
+        styleClass="w-full"
+      />
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div
+    class="mt-3 flex items-center justify-between border-t border-zinc-100 pt-2.5 text-xs text-zinc-400"
+  >
+    <span
+      class="font-medium"
+      [class.text-zinc-400]="!isOverdue && !dueDate"
+      [class.text-zinc-500]="!isOverdue && dueDate"
+      [class.text-red-500]="isOverdue"
+    >
+      @if (isOverdue) {
+        <i class="ti ti-alert-triangle-filled mr-0.5 text-xs"></i>
+      }
+      {{ dueDate ? daysUntilDue : "Sin fecha" }}
+    </span>
+
+    <span>
+      @if (dateToggle.showCreated$ | async) {
+        {{ createdAt | date: "dd/MM HH:mm" }}
+      } @else {
+        {{ updatedAt | date: "dd/MM HH:mm" }}
+      }
+    </span>
   </div>
 </section>
